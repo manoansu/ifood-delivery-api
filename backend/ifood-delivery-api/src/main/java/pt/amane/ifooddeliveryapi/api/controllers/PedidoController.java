@@ -10,7 +10,7 @@ import pt.amane.ifooddeliveryapi.domain.repositories.PedidoRepository;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/prdidos")
+@RequestMapping(value = "/pedidos")
 public class PedidoController {
 
     @Autowired
