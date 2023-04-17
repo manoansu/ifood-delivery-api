@@ -3,10 +3,6 @@ package pt.amane.ifooddeliveryapi;
 import org.apache.catalina.core.ApplicationContext;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import pt.amane.ifooddeliveryapi.domain.entities.CadastroCozinha;
-import pt.amane.ifooddeliveryapi.domain.entities.Cozinha;
-
-import java.util.List;
 
 public class ConsultaCozinhaMain {
 
