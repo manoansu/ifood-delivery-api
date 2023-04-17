@@ -25,8 +25,9 @@ public class Restaurante implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "taxa_frete")
+
     private String nome;
+    @Column(name = "taxa_frete")
     private BigDecimal taxaFrete;
     private Boolean ativo;
     private Boolean activo;

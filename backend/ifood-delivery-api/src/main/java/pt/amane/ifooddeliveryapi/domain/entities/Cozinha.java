@@ -13,7 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "tb_cozinhas")
+@Table(name = "tb_cozinha")
 public class Cozinha implements Serializable {
 
     private static final long serialVersioUID = 1L;
