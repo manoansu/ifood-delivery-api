@@ -13,15 +13,20 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "tb_cozinha")
-public class Cozinha implements Serializable {
+@Table(name = "tb_cidade")
+public class Cidade implements Serializable {
 
-    private static final long serialVersioUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false)
     private String nome;
+
+    @ManyToOne
+    @JoinColumn(name = "estado_id", nullable = false)
+    private Estado estado;
 }

@@ -9,19 +9,19 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name = "tb_cozinha")
-public class Cozinha implements Serializable {
+@Table(name = "tb_forma_pagamento")
+public class FormaPagamento implements Serializable {
 
-    private static final long serialVersioUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private String nome;
+    private String descricao;
 }

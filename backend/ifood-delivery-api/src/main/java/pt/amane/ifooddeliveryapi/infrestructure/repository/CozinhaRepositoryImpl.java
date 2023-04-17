@@ -1,5 +1,6 @@
 package pt.amane.ifooddeliveryapi.infrestructure.repository;
 
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pt.amane.ifooddeliveryapi.domain.entities.Cozinha;
 import pt.amane.ifooddeliveryapi.domain.repositories.CozinhaRepository;
@@ -8,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
+@Component
 public class CozinhaRepositoryImpl implements CozinhaRepository {
 
     @PersistenceContext // injecta o EntityManager

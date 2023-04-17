@@ -7,16 +7,17 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name = "tb_cozinha")
-public class Cozinha implements Serializable {
+@Table(name = "tb_produtoi")
+public class Produto implements Serializable {
 
-    private static final long serialVersioUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     @EqualsAndHashCode.Include
     @Id
@@ -24,4 +25,14 @@ public class Cozinha implements Serializable {
     private Long id;
     @Column(nullable = false)
     private String nome;
+    @Column(nullable = false)
+    private String descricao;
+
+    private BigDecimal preco;
+
+    private Boolean activo;
+
+    @ManyToOne
+    @JoinColumn(name = "restaurante_id", nullable = false)
+    private Restaurante restaurante;
 }
