@@ -1,5 +1,6 @@
 package pt.amane.ifooddeliveryapi.infrestructure.repository;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pt.amane.ifooddeliveryapi.domain.entities.Cozinha;
@@ -47,13 +48,16 @@ public class CozinhaRepositoryImpl implements CozinhaRepository {
 
     /**
      * Remove na tabela o bojecto cozinha
-     * @param cozinha
+     * @param id
      * @return a instancia da cozinha.
      */
     @Transactional
     @Override
-    public void remover(Cozinha cozinha) {
-        cozinha = buscar(cozinha.getId());
+    public void remover(Long id) {
+        Cozinha cozinha = buscar(id);
+        if (cozinha == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
         manager.remove(cozinha);
     }
 }

@@ -12,7 +12,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pt.amane.ifooddeliveryapi.api.model.CozinhasXmlWrapper;
 import pt.amane.ifooddeliveryapi.domain.entities.Cozinha;
+import pt.amane.ifooddeliveryapi.domain.exception.EntidadeEmUsoException;
+import pt.amane.ifooddeliveryapi.domain.exception.EntidadeNaoEncontradaException;
 import pt.amane.ifooddeliveryapi.domain.repositories.CozinhaRepository;
+import pt.amane.ifooddeliveryapi.domain.services.CadastroCozinhaService;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -23,6 +26,9 @@ public class CozinhaController {
 
     @Autowired
     private CozinhaRepository repository;
+
+    @Autowired
+    private CadastroCozinhaService service;
 
     @GetMapping
     public List<Cozinha> listar() {
@@ -58,7 +64,7 @@ public class CozinhaController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Cozinha adicionar(@RequestBody Cozinha cozinha) {
-        return repository.salvar(cozinha);
+        return service.salvar(cozinha);
     }
 
     @PutMapping(value = "/{cozinhaId}")
@@ -80,14 +86,13 @@ public class CozinhaController {
     public ResponseEntity<Cozinha> remover(@PathVariable Long cozinhaId) {
 
         try {
-            Cozinha cozinha = repository.buscar(cozinhaId);
+             service.remover(cozinhaId);
+             return ResponseEntity.noContent().build();
 
-            if (cozinha != null) {
-                repository.remover(cozinha);
-                return ResponseEntity.noContent().build();
-            }
+        } catch (EntidadeNaoEncontradaException e) {
             return ResponseEntity.notFound().build();
-        } catch (DataIntegrityViolationException e) {
+
+        }catch (EntidadeEmUsoException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
