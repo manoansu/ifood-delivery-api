@@ -1,5 +1,6 @@
 package pt.amane.ifooddeliveryapi.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -40,11 +41,15 @@ public class Restaurante implements Serializable {
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
 
-    @OneToMany
-    private List<FormaPagamento> formasPagamento = new ArrayList<>();
+    @JsonIgnore
     @OneToMany(mappedBy = "restaurante")
     private List<Produto> produtos = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToMany
+    private List<FormaPagamento> formasPagamento = new ArrayList<>();
+
+    @JsonIgnore
     @OneToMany
     private List<Usuario> responsaveis = new ArrayList<>();
 
