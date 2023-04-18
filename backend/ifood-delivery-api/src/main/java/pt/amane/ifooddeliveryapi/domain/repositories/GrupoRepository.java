@@ -9,7 +9,7 @@ public interface GrupoRepository {
     List<Grupo> listar();
     Grupo buscar(Long id);
     Grupo salvar(Grupo grupo);
-    void remover(Grupo grupo);
+    void remover(Long id);
 
 
 }

@@ -47,13 +47,13 @@ public class ProdutoRepositoryImpl implements ProdutoRepository {
 
     /**
      * Remove na tabela o bojecto produto
-     * @param produto
+     * @param id
      * @return a instancia da produto.
      */
     @Transactional
     @Override
-    public void remover(Produto produto) {
-        produto = buscar(produto.getId());
+    public void remover(Long id) {
+        Produto produto = buscar(id);
         manager.remove(produto);
     }
 }

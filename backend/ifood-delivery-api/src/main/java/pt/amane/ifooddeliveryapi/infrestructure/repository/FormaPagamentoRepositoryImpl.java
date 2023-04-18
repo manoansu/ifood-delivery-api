@@ -47,13 +47,13 @@ public class FormaPagamentoRepositoryImpl implements FormaPagamentoRepository {
 
     /**
      * Remove na tabela o bojecto formaPagamento
-     * @param formaPagamento
+     * @param id
      * @return a instancia da formaPagamento.
      */
     @Transactional
     @Override
-    public void remover(FormaPagamento formaPagamento) {
-        formaPagamento = buscar(formaPagamento.getId());
+    public void remover(Long id) {
+        FormaPagamento formaPagamento = buscar(id);
         manager.remove(formaPagamento);
     }
 }

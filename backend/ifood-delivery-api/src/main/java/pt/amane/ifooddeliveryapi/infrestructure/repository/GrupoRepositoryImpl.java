@@ -47,13 +47,13 @@ public class GrupoRepositoryImpl implements GrupoRepository {
 
     /**
      * Remove na tabela o bojecto grupo
-     * @param grupo
+     * @param id
      * @return a instancia da grupo.
      */
     @Transactional
     @Override
-    public void remover(Grupo grupo) {
-        grupo = buscar(grupo.getId());
+    public void remover(Long id) {
+        Grupo grupo = buscar(id);
         manager.remove(grupo);
     }
 }

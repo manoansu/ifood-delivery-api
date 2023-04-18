@@ -47,13 +47,13 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
 
     /**
      * Remove na tabela o bojecto usuario
-     * @param usuario
+     * @param id
      * @return a instancia da usuario.
      */
     @Transactional
     @Override
-    public void remover(Usuario usuario) {
-        usuario = buscar(usuario.getId());
+    public void remover(Long id) {
+        Usuario usuario = buscar(id);
         manager.remove(usuario);
     }
 }

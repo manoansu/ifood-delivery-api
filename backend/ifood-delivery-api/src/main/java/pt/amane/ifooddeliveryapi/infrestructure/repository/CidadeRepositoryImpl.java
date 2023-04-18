@@ -47,13 +47,13 @@ public class CidadeRepositoryImpl implements CidadeRepository {
 
     /**
      * Remove na tabela o bojecto cidade
-     * @param cidade
+     * @param id
      * @return a instancia da cidade.
      */
     @Transactional
     @Override
-    public void remover(Cidade cidade) {
-        cidade = buscar(cidade.getId());
+    public void remover(Long id) {
+        Cidade cidade = buscar(id);
         manager.remove(cidade);
     }
 }

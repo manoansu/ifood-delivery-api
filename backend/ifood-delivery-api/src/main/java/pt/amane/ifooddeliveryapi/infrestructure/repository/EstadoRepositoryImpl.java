@@ -47,13 +47,13 @@ public class EstadoRepositoryImpl implements EstadoRepository {
 
     /**
      * Remove na tabela o bojecto estado
-     * @param estado
+     * @param id
      * @return a instancia da estado.
      */
     @Transactional
     @Override
-    public void remover(Estado estado) {
-        estado = buscar(estado.getId());
+    public void remover(Long id) {
+        Estado estado = buscar(id);
         manager.remove(estado);
     }
 }

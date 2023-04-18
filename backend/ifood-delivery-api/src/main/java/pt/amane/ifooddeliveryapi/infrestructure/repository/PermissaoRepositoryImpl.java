@@ -47,13 +47,13 @@ public class PermissaoRepositoryImpl implements PermissaoRepository {
 
     /**
      * Remove na tabela o bojecto permissao
-     * @param permissao
+     * @param id
      * @return a instancia da permissao.
      */
     @Transactional
     @Override
-    public void remover(Permissao permissao) {
-        permissao = buscar(permissao.getId());
+    public void remover(Long id) {
+        Permissao permissao = buscar(id);
         manager.remove(permissao);
     }
 }

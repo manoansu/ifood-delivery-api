@@ -47,13 +47,13 @@ public class PedidoRepositoryImpl implements PedidoRepository {
 
     /**
      * Remove na tabela o bojecto pedido
-     * @param pedido
+     * @param id
      * @return a instancia da pedido.
      */
     @Transactional
     @Override
-    public void remover(Pedido pedido) {
-        pedido = buscar(pedido.getId());
+    public void remover(Long id) {
+        Pedido pedido = buscar(id);
         manager.remove(pedido);
     }
 }

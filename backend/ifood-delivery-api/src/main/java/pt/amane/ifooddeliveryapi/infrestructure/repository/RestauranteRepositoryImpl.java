@@ -47,13 +47,13 @@ public class RestauranteRepositoryImpl implements RestauranteRepository {
 
     /**
      * Remove na tabela o bojecto restaurante
-     * @param restaurante
+     * @param id
      * @return a instancia da restaurante.
      */
     @Transactional
     @Override
-    public void remover(Restaurante restaurante) {
-        restaurante = buscar(restaurante.getId());
+    public void remover(Long id) {
+        Restaurante restaurante = buscar(id);
         manager.remove(restaurante);
     }
 }
