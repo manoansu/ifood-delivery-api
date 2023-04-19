@@ -1,6 +1,7 @@
 package pt.amane.ifooddeliveryapi.infrestructure.repository;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 import pt.amane.ifooddeliveryapi.domain.entities.Restaurante;
 import pt.amane.ifooddeliveryapi.domain.repositories.RestauranteRepositoryQueries;
 
@@ -12,6 +13,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -60,18 +62,23 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
         // é uma interface responsavel por montar um estrutura queryo u seja é um construtor de clausulas.
         CriteriaQuery<Restaurante> criteria = builder.createQuery(Restaurante.class);
 
+        var predicates = new ArrayList<Predicate>();
+
         //è raiz do restaurante..
         Root<Restaurante> root = criteria.from(Restaurante.class); // from Restaurante
 
-        Predicate nomePredicate = builder.like(root.get("nome"), "%" + nome + "%");
-
-        Predicate taxaInicialPredicate = builder
-                .greaterThanOrEqualTo(root.get("taxaFrete"), taxaFreteInicial);
-
-        Predicate taxaFinalPredicate = builder
-                .lessThanOrEqualTo(root.get("taxaFrete"), taxaFreteFinal);
-
-        criteria.where(nomePredicate, taxaInicialPredicate, taxaFinalPredicate);
+        if (StringUtils.hasLength(nome)) {
+            predicates.add(builder.like(root.get("nome"), "%" + nome + "%"));
+        }
+        if (taxaFreteInicial != null) {
+           predicates.add(builder
+                    .greaterThanOrEqualTo(root.get("taxaFrete"), taxaFreteInicial));
+        }
+        if (taxaFreteInicial != null) {
+            predicates.add(builder
+                    .lessThanOrEqualTo(root.get("taxaFrete"), taxaFreteFinal));
+        }
+        criteria.where(new Predicate[0]);
 
          //pega o valor da consulta do tipo restaurante.
         TypedQuery<Restaurante> query = manager.createQuery(criteria);
