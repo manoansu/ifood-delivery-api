@@ -4,24 +4,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import pt.amane.ifooddeliveryapi.domain.entities.Cozinha;
 import pt.amane.ifooddeliveryapi.domain.entities.Restaurante;
 import pt.amane.ifooddeliveryapi.domain.exception.EntidadeEmUsoException;
 import pt.amane.ifooddeliveryapi.domain.exception.EntidadeNaoEncontradaException;
+import pt.amane.ifooddeliveryapi.domain.repositories.CozinhaRepository;
 import pt.amane.ifooddeliveryapi.domain.repositories.RestauranteRepository;
 
 @Service
 public class CadastroRestauranteService {
 
     @Autowired
-    private RestauranteRepository repository;
+    private RestauranteRepository restauranteRepository;
+
+    @Autowired
+    private CozinhaRepository cozinhaRepository;
 
     public Restaurante salvar(Restaurante restaurante) {
-        return repository.salvar(restaurante);
+        Long cozinhaId = restaurante.getCozinha().getId();
+
+        Cozinha cozinha = cozinhaRepository.findById(cozinhaId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        String.format("Não existe cadastro de cozinha com código %d", cozinhaId)));
+
+        restaurante.setCozinha(cozinha);
+
+        return restauranteRepository.salvar(restaurante);
     }
 
     public void remover(Long id) {
         try {
-            repository.remover(id);
+            restauranteRepository.remover(id);
 
         }catch (EmptyResultDataAccessException e) {
             throw new EntidadeNaoEncontradaException(

@@ -1,13 +1,12 @@
 package pt.amane.ifooddeliveryapi.domain.repositories;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import pt.amane.ifooddeliveryapi.domain.entities.Cozinha;
 
-import java.util.List;
+@Repository
+public interface CozinhaRepository extends JpaRepository<Cozinha, Long> {
 
-public interface CozinhaRepository {List<Cozinha> listar();
-    Cozinha buscar(Long id);
-    Cozinha salvar(Cozinha cozinha);
-    void remover(Long id);
-
+//    List<Cozinha> listrPorNome(String nome);
 
 }

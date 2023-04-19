@@ -1,16 +1,11 @@
 package pt.amane.ifooddeliveryapi.api.controllers;
 
-import com.sun.net.httpserver.Headers;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import pt.amane.ifooddeliveryapi.api.model.CozinhasXmlWrapper;
 import pt.amane.ifooddeliveryapi.domain.entities.Cozinha;
 import pt.amane.ifooddeliveryapi.domain.exception.EntidadeEmUsoException;
 import pt.amane.ifooddeliveryapi.domain.exception.EntidadeNaoEncontradaException;
@@ -18,7 +13,7 @@ import pt.amane.ifooddeliveryapi.domain.repositories.CozinhaRepository;
 import pt.amane.ifooddeliveryapi.domain.services.CadastroCozinhaService;
 
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/cozinhas", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -31,33 +26,18 @@ public class CozinhaController {
     private CadastroCozinhaService service;
 
     @GetMapping
-    public List<Cozinha> listar() {
-        return repository.listar();
-    }
-
-    @GetMapping( produces = MediaType.APPLICATION_XML_VALUE)
-    public CozinhasXmlWrapper listarXml() {
-        return new CozinhasXmlWrapper(repository.listar());
+    public List<Cozinha> findAll() {
+        return repository.findAll();
     }
 
     @GetMapping(value = "/{cozinhaId}")
     public ResponseEntity<Cozinha> buscar(@PathVariable Long cozinhaId) {
-        Cozinha cozinha = repository.buscar(cozinhaId);
+        Optional<Cozinha> cozinha = repository.findById(cozinhaId);
 
-//        return ResponseEntity.status(HttpStatus.OK).body(cozinha);
-//        return ResponseEntity.ok().body(cozinha);
-//        return ResponseEntity.ok(cozinha);
-
-//        Headers headers = new Headers();
-//        headers.add(HttpHeaders.LOCATION, "http://localhost:8080/cozinhas");
-//
-//        return ResponseEntity.status(HttpStatus.FOUND).headers((Consumer<HttpHeaders>) headers).build();
-
-        if (cozinha != null) {
-            return ResponseEntity.ok(cozinha);
+        if (cozinha.isPresent()) {
+            return ResponseEntity.ok(cozinha.get());
         }
 
-//        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         return ResponseEntity.notFound().build();
     }
 
@@ -67,17 +47,16 @@ public class CozinhaController {
         return service.salvar(cozinha);
     }
 
-    @PutMapping(value = "/{cozinhaId}")
-    public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId,@RequestBody Cozinha cozinha) {
-        Cozinha cozinhaPersistidoBd = repository.buscar(cozinhaId);
+    @PutMapping("/{cozinhaId}")
+    public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId,
+                                             @RequestBody Cozinha cozinha) {
+        Optional<Cozinha> cozinhaAtual = repository.findById(cozinhaId);
 
-        if (cozinhaPersistidoBd != null){
+        if (cozinhaAtual.isPresent()) {
+            BeanUtils.copyProperties(cozinha, cozinhaAtual.get(), "id");
 
-    //        cozinhaPersistidoBd.setNome(cozinha.getNome());
-            BeanUtils.copyProperties(cozinha, cozinhaPersistidoBd, "id");
-            repository.salvar(cozinha);
-
-            return ResponseEntity.ok(cozinhaPersistidoBd);
+            Cozinha cozinhaSalva = repository.save(cozinhaAtual.get());
+            return ResponseEntity.ok(cozinhaSalva);
         }
 
         return ResponseEntity.notFound().build();
