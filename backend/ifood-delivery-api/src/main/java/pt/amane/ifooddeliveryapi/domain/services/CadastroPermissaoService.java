@@ -15,13 +15,13 @@ public class CadastroPermissaoService {
     @Autowired
     private PermissaoRepository repository;
 
-    public Permissao salvar(Permissao permissao) {
-        return repository.salvar(permissao);
+    public Permissao create(Permissao permissao) {
+        return repository.save(permissao);
     }
 
-    public void remover(Long id) {
+    public void delete(Long id) {
         try {
-            repository.remover(id);
+            repository.deleteById(id);
 
         }catch (EmptyResultDataAccessException e) {
             throw new EntidadeNaoEncontradaException(

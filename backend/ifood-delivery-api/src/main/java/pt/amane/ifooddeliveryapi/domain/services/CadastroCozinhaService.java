@@ -15,11 +15,11 @@ public class CadastroCozinhaService {
     @Autowired
     private CozinhaRepository repository;
 
-    public Cozinha salvar(Cozinha cozinha) {
+    public Cozinha create(Cozinha cozinha) {
         return repository.save(cozinha);
     }
 
-    public void remover(Long id) {
+    public void delete(Long id) {
         try {
             repository.deleteById(id);
 

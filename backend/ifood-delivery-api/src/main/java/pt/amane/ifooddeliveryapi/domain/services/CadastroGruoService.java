@@ -15,13 +15,13 @@ public class CadastroGruoService {
     @Autowired
     private GrupoRepository repository;
 
-    public Grupo salvar(Grupo grupo) {
-        return repository.salvar(grupo);
+    public Grupo create(Grupo grupo) {
+        return repository.save(grupo);
     }
 
-    public void remover(Long id) {
+    public void delete(Long id) {
         try {
-            repository.remover(id);
+            repository.deleteById(id);
 
         }catch (EmptyResultDataAccessException e) {
             throw new EntidadeNaoEncontradaException(

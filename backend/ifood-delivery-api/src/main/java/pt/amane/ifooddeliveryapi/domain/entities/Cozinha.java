@@ -28,7 +28,7 @@ public class Cozinha implements Serializable {
     private Long id;
 
 //    @JsonIgnore
-    @JsonIgnoreProperties("titulo")
+//    @JsonIgnoreProperties("titulo")
     @Column(nullable = false)
     private String nome;
 }

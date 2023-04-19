@@ -15,13 +15,13 @@ public class CadastroPedidoService {
     @Autowired
     private PedidoRepository repository;
 
-    public Pedido salvar(Pedido pedido) {
-        return repository.salvar(pedido);
+    public Pedido create(Pedido pedido) {
+        return repository.save(pedido);
     }
 
-    public void remover(Long id) {
+    public void delete(Long id) {
         try {
-            repository.remover(id);
+            repository.deleteById(id);
 
         }catch (EmptyResultDataAccessException e) {
             throw new EntidadeNaoEncontradaException(

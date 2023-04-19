@@ -15,13 +15,13 @@ public class CadastroFormaPagamentoService {
     @Autowired
     private FormaPagamentoRepository repository;
 
-    public FormaPagamento salvar(FormaPagamento formaPagamento) {
-        return repository.salvar(formaPagamento);
+    public FormaPagamento create(FormaPagamento formaPagamento) {
+        return repository.save(formaPagamento);
     }
 
-    public void remover(Long id) {
+    public void delete(Long id) {
         try {
-            repository.remover(id);
+            repository.deleteById(id);
 
         }catch (EmptyResultDataAccessException e) {
             throw new EntidadeNaoEncontradaException(

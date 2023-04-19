@@ -16,12 +16,12 @@ public class CadastroCidadeService {
     private CidadeRepository repository;
 
     public Cidade salvar(Cidade cidade) {
-        return repository.salvar(cidade);
+        return repository.save(cidade);
     }
 
     public void remover(Long id) {
         try {
-            repository.remover(id);
+            repository.deleteById(id);
 
         }catch (EmptyResultDataAccessException e) {
             throw new EntidadeNaoEncontradaException(

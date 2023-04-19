@@ -15,13 +15,13 @@ public class CadastroProdutoService {
     @Autowired
     private ProdutoRepository repository;
 
-    public Produto salvar(Produto produto) {
-        return repository.salvar(produto);
+    public Produto create(Produto produto) {
+        return repository.save(produto);
     }
 
-    public void remover(Long id) {
+    public void delete(Long id) {
         try {
-            repository.remover(id);
+            repository.deleteById(id);
 
         }catch (EmptyResultDataAccessException e) {
             throw new EntidadeNaoEncontradaException(

@@ -1,15 +1,8 @@
 package pt.amane.ifooddeliveryapi.domain.repositories;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import pt.amane.ifooddeliveryapi.domain.entities.Pedido;
-
-import java.util.List;
-
-public interface PedidoRepository {
-
-    List<Pedido> listar();
-    Pedido buscar(Long id);
-    Pedido salvar(Pedido pedido);
-    void remover(Long id);
-
-
+@Repository
+public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 }

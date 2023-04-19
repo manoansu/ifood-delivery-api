@@ -31,7 +31,7 @@ public class CozinhaController {
     }
 
     @GetMapping(value = "/{cozinhaId}")
-    public ResponseEntity<Cozinha> buscar(@PathVariable Long cozinhaId) {
+    public ResponseEntity<Cozinha> findById(@PathVariable Long cozinhaId) {
         Optional<Cozinha> cozinha = repository.findById(cozinhaId);
 
         if (cozinha.isPresent()) {
@@ -43,12 +43,12 @@ public class CozinhaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cozinha adicionar(@RequestBody Cozinha cozinha) {
-        return service.salvar(cozinha);
+    public Cozinha create(@RequestBody Cozinha cozinha) {
+        return service.create(cozinha);
     }
 
     @PutMapping("/{cozinhaId}")
-    public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId,
+    public ResponseEntity<Cozinha> update(@PathVariable Long cozinhaId,
                                              @RequestBody Cozinha cozinha) {
         Optional<Cozinha> cozinhaAtual = repository.findById(cozinhaId);
 
@@ -62,10 +62,10 @@ public class CozinhaController {
         return ResponseEntity.notFound().build();
     }
     @DeleteMapping(value = "/{cozinhaId}")
-    public ResponseEntity<Cozinha> remover(@PathVariable Long cozinhaId) {
+    public ResponseEntity<Cozinha> delete(@PathVariable Long cozinhaId) {
 
         try {
-             service.remover(cozinhaId);
+             service.delete(cozinhaId);
              return ResponseEntity.noContent().build();
 
         } catch (EntidadeNaoEncontradaException e) {

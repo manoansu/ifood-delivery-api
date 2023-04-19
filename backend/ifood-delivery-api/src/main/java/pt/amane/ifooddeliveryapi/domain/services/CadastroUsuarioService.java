@@ -15,13 +15,13 @@ public class CadastroUsuarioService {
     @Autowired
     private UsuarioRepository repository;
 
-    public Usuario salvar(Usuario usuario) {
-        return repository.salvar(usuario);
+    public Usuario create(Usuario usuario) {
+        return repository.save(usuario);
     }
 
-    public void remover(Long id) {
+    public void delete(Long id) {
         try {
-            repository.remover(id);
+            repository.deleteById(id);
 
         }catch (EmptyResultDataAccessException e) {
             throw new EntidadeNaoEncontradaException(

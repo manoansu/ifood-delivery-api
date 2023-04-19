@@ -17,6 +17,7 @@ import pt.amane.ifooddeliveryapi.domain.services.CadastroRestauranteService;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/restaurantes", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -29,25 +30,25 @@ public class RestauranteController {
     private CadastroRestauranteService service;
 
     @GetMapping
-    public List<Restaurante> listar() {
-        return repository.listar();
+    public List<Restaurante> findAll() {
+        return repository.findAll();
     }
 
     @GetMapping(value = "/{restauranteId}")
-    public ResponseEntity<Restaurante> buscar(@PathVariable Long restauranteId) {
-        Restaurante restaurante = repository.buscar(restauranteId);
+    public ResponseEntity<Restaurante> findById(@PathVariable Long restauranteId) {
+        Optional<Restaurante> restaurante = repository.findById(restauranteId);
 
-        if (restaurante != null) {
-            return ResponseEntity.ok(restaurante);
+        if (restaurante.isPresent()) {
+            return ResponseEntity.ok(restaurante.get());
         }
 
         return ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public ResponseEntity<?> adicionar(@RequestBody Restaurante restaurante) {
+    public ResponseEntity<?> create(@RequestBody Restaurante restaurante) {
         try {
-            restaurante = service.salvar(restaurante);
+            restaurante = service.create(restaurante);
 
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(restaurante);
@@ -58,16 +59,16 @@ public class RestauranteController {
     }
 
     @PutMapping("/{restauranteId}")
-    public ResponseEntity<?> atualizar(@PathVariable Long restauranteId,
+    public ResponseEntity<?> update(@PathVariable Long restauranteId,
                                        @RequestBody Restaurante restaurante) {
         try {
-            Restaurante restaurantePersistoidoBd = repository.buscar(restauranteId);
+            Optional<Restaurante> restaurantePersistoidoBd = repository.findById(restauranteId);
 
-            if (restaurantePersistoidoBd != null) {
-                BeanUtils.copyProperties(restaurante, restaurantePersistoidoBd, "id");
+            if (restaurantePersistoidoBd.isPresent()) {
+                BeanUtils.copyProperties(restaurante, restaurantePersistoidoBd.get(), "id");
 
-                restaurantePersistoidoBd = repository.salvar(restaurantePersistoidoBd);
-                return ResponseEntity.ok(restaurantePersistoidoBd);
+                Restaurante restauranteSalva = repository.save(restaurantePersistoidoBd.get());
+                return ResponseEntity.ok(restauranteSalva);
             }
 
             return ResponseEntity.notFound().build();
@@ -79,24 +80,24 @@ public class RestauranteController {
     }
 
     @PatchMapping("/{restauranteId}")
-    public ResponseEntity<?> atualizarParcial(@PathVariable Long restauranteId,
+    public ResponseEntity<?> partialUpdate(@PathVariable Long restauranteId,
                                               @RequestBody Map<String, Object> campos) {
-        Restaurante restaurantePersistoidoBd = repository.buscar(restauranteId);
+        Optional<Restaurante> restaurantePersistoidoBd = repository.findById(restauranteId);
 
-        if (restaurantePersistoidoBd == null) {
+        if (restaurantePersistoidoBd.isPresent()) {
             return ResponseEntity.notFound().build();
         }
 
-        merge(campos, restaurantePersistoidoBd);
+        merge(campos, restaurantePersistoidoBd.get());
 
-        return atualizar(restauranteId, restaurantePersistoidoBd);
+        return update(restauranteId, restaurantePersistoidoBd.get());
     }
 
     @DeleteMapping(value = "/{restauranteId}")
-    public ResponseEntity<?> remover(@PathVariable Long restauranteId) {
+    public ResponseEntity<?> delete(@PathVariable Long restauranteId) {
 
         try {
-            service.remover(restauranteId);
+            service.delete(restauranteId);
             return ResponseEntity.noContent().build();
 
         } catch (EntidadeNaoEncontradaException e) {

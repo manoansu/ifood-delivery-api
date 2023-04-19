@@ -1,15 +1,8 @@
 package pt.amane.ifooddeliveryapi.domain.repositories;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import pt.amane.ifooddeliveryapi.domain.entities.Grupo;
-
-import java.util.List;
-
-public interface GrupoRepository {
-
-    List<Grupo> listar();
-    Grupo buscar(Long id);
-    Grupo salvar(Grupo grupo);
-    void remover(Long id);
-
-
+@Repository
+public interface GrupoRepository extends JpaRepository<Grupo, Long> {
 }

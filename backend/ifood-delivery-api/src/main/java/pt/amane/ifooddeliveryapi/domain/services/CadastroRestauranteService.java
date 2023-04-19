@@ -20,7 +20,7 @@ public class CadastroRestauranteService {
     @Autowired
     private CozinhaRepository cozinhaRepository;
 
-    public Restaurante salvar(Restaurante restaurante) {
+    public Restaurante create(Restaurante restaurante) {
         Long cozinhaId = restaurante.getCozinha().getId();
 
         Cozinha cozinha = cozinhaRepository.findById(cozinhaId)
@@ -29,12 +29,12 @@ public class CadastroRestauranteService {
 
         restaurante.setCozinha(cozinha);
 
-        return restauranteRepository.salvar(restaurante);
+        return restauranteRepository.save(restaurante);
     }
 
-    public void remover(Long id) {
+    public void delete(Long id) {
         try {
-            restauranteRepository.remover(id);
+            restauranteRepository.deleteById(id);
 
         }catch (EmptyResultDataAccessException e) {
             throw new EntidadeNaoEncontradaException(
