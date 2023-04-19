@@ -1,8 +1,11 @@
 package pt.amane.ifooddeliveryapi.infrestructure.repository;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 import pt.amane.ifooddeliveryapi.domain.entities.Restaurante;
+import pt.amane.ifooddeliveryapi.domain.repositories.RestauranteRepository;
 import pt.amane.ifooddeliveryapi.domain.repositories.RestauranteRepositoryQueries;
 
 import javax.persistence.EntityManager;
@@ -16,11 +19,18 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static pt.amane.ifooddeliveryapi.infrestructure.repository.spec.RestauranteSpecs.comFreteGratis;
+import static pt.amane.ifooddeliveryapi.infrestructure.repository.spec.RestauranteSpecs.comNomeSemelhante;
+
 @Repository
 public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
 
     @PersistenceContext
     private EntityManager manager;
+
+    @Autowired
+    @Lazy
+    private RestauranteRepository restauranteRepository;
 
 //    public List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal) {
 //
@@ -84,5 +94,11 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
         TypedQuery<Restaurante> query = manager.createQuery(criteria);
 
         return query.getResultList();
+    }
+
+    @Override
+    public List<Restaurante> findComFreteGratis(String nome) {
+        return restauranteRepository.findAll(comFreteGratis()
+                .and(comNomeSemelhante(nome)));
     }
 }
