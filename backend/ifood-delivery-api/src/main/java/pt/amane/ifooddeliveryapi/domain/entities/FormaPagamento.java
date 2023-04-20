@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
@@ -24,4 +26,7 @@ public class FormaPagamento implements Serializable {
     private Long id;
     @Column(nullable = false)
     private String descricao;
+
+//    @ManyToMany(mappedBy = "formasPagamento")
+//    private Set<Restaurante> restaurantes = new HashSet<>();
 }

@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
@@ -31,6 +29,4 @@ public class Permissao implements Serializable {
     @Column(nullable = false)
     private String descricao;
 
-    @ManyToMany
-    private Set<Grupo> permissoes = new HashSet<>();
 }
