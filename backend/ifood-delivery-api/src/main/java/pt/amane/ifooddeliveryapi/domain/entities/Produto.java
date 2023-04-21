@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "tb_produto")
 public class Produto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -33,6 +32,6 @@ public class Produto implements Serializable {
     private Boolean ativo;
 
     @ManyToOne
-    @JoinColumn(name = "restaurante_id", nullable = false)
+    @JoinColumn(nullable = false)
     private Restaurante restaurante;
 }

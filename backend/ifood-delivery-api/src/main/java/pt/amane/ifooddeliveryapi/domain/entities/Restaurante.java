@@ -5,14 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -23,7 +20,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "tb_restaurante")
 public class Restaurante implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -60,7 +56,7 @@ public class Restaurante implements Serializable {
     private Endereco endereco;
 
     @ManyToOne
-    @JoinColumn(name = "cozinha_id", nullable = false)
+    @JoinColumn(nullable = false)
     private Cozinha cozinha;
 
     @JsonIgnore
@@ -69,7 +65,7 @@ public class Restaurante implements Serializable {
 
     @JsonIgnore
     @ManyToMany
-    @JoinTable(name = "tb_restaurante_forma_pagamento",
+    @JoinTable(name = "restaurante_forma_pagamento",
         joinColumns = @JoinColumn(name = "restaurante_id"),
         inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
     private Set<FormaPagamento> formasPagamento = new HashSet<>();
@@ -77,14 +73,6 @@ public class Restaurante implements Serializable {
     @JsonIgnore
     @OneToMany
     private List<Usuario> responsaveis = new ArrayList<>();
-
-    public Instant getDataCadastro() {
-        return dataCadastro;
-    }
-
-    public Instant getDataAtualizacao() {
-        return dataAtualizacao;
-    }
 
     @PrePersist
     public void prePersist(){

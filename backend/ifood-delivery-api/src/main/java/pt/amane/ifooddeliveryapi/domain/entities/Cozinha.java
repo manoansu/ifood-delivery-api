@@ -17,7 +17,6 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "tb_cozinha")
 public class Cozinha implements Serializable {
 
     private static final long serialVersioUID = 1L;

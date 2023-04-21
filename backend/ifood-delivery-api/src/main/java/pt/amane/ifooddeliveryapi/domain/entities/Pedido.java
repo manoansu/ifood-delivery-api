@@ -17,7 +17,6 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "tb_pedido")
 public class Pedido implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -35,19 +34,24 @@ public class Pedido implements Serializable {
     private Instant dataCancelamento;
     private Instant dataEntrega;
 
+    @Embedded
+    private Endereco enderecoEntrega;
+
     private StatusPedido statusPedido;
 
     @ManyToOne
+    @JoinColumn(nullable = false)
     private FormaPagamento formaPagamento;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
+    @JoinColumn(name = "usuario_cliente_id", nullable = false)
     private Usuario cliente;
 
     @ManyToOne
-    @JoinColumn(name = "restaurante_id", nullable = false)
+    @JoinColumn(nullable = false)
     private Restaurante restaurante;
 
     @OneToMany(mappedBy = "pedido")
     private List<ItemPedido> itemPedidos = new ArrayList<>();
+
 }

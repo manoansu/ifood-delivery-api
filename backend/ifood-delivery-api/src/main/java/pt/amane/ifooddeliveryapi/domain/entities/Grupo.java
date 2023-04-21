@@ -15,7 +15,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "tb_grupo")
 public class Grupo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -29,7 +28,7 @@ public class Grupo implements Serializable {
     private String nome;
 
     @ManyToMany
-    @JoinTable(name = "tb_gruppo_permissao",
+    @JoinTable(name = "gruppo_permissao",
         joinColumns = @JoinColumn(name = "grupo_id"),
         inverseJoinColumns = @JoinColumn(name = "permissao_id"))
     private Set<Permissao> permissoes = new HashSet<>();

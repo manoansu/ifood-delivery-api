@@ -13,7 +13,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "tb_cidade")
 public class Cidade implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -27,6 +26,6 @@ public class Cidade implements Serializable {
     private String nome;
 
     @ManyToOne
-    @JoinColumn(name = "estado_id", nullable = false)
+    @JoinColumn(nullable = false)
     private Estado estado;
 }

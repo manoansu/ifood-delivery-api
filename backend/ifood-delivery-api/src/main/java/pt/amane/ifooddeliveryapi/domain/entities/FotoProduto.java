@@ -13,7 +13,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "tb_fotoproduto")
 public class FotoProduto implements Serializable {
 
     private static final long serialVersioUID = 1L;
@@ -32,6 +31,6 @@ public class FotoProduto implements Serializable {
     private Long tamanho;
 
     @ManyToOne
-    @JoinColumn(name = "produto_id", nullable = false)
+    @JoinColumn(nullable = false)
     private Produto produto;
 }

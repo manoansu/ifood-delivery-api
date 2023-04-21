@@ -15,7 +15,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "tb_forma_pagamento")
 public class FormaPagamento implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -26,7 +25,4 @@ public class FormaPagamento implements Serializable {
     private Long id;
     @Column(nullable = false)
     private String descricao;
-
-//    @ManyToMany(mappedBy = "formasPagamento")
-//    private Set<Restaurante> restaurantes = new HashSet<>();
 }
