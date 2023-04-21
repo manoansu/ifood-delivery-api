@@ -4,16 +4,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pt.amane.ifooddeliveryapi.domain.entities.Pedido;
-import pt.amane.ifooddeliveryapi.domain.exception.EntidadeEmUsoException;
-import pt.amane.ifooddeliveryapi.domain.exception.EntidadeNaoEncontradaException;
 import pt.amane.ifooddeliveryapi.domain.repositories.PedidoRepository;
 import pt.amane.ifooddeliveryapi.domain.services.CadastroPedidoService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/pedidos", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -31,14 +27,8 @@ public class PedidoController {
     }
 
     @GetMapping(value = "/{pedidoId}")
-    public ResponseEntity<Pedido> findById(@PathVariable Long pedidoId) {
-
-        Optional<Pedido> pedidoOptional = repository.findById(pedidoId);
-
-        if (pedidoOptional.isPresent()) {
-            return ResponseEntity.ok(pedidoOptional.get());
-        }
-        return ResponseEntity.notFound().build();
+    public Pedido findById(@PathVariable Long pedidoId) {
+        return service.findById(pedidoId);
     }
 
     @PostMapping
@@ -48,31 +38,15 @@ public class PedidoController {
     }
 
     @PutMapping("/{pedidoId}")
-    public ResponseEntity<Pedido> update(@PathVariable Long pedidoId,
-                                         @RequestBody Pedido pedido) {
-        Optional<Pedido> pedidoPersistidoBd = repository.findById(pedidoId);
+    public Pedido update(@PathVariable Long pedidoId, @RequestBody Pedido pedido) {
+        Pedido pedidoPersistidoBd = service.findById(pedidoId);
 
-        if (pedidoPersistidoBd.isPresent()) {
-            BeanUtils.copyProperties(pedido, pedidoPersistidoBd.get(), "id");
+        BeanUtils.copyProperties(pedido, pedidoPersistidoBd, "id");
 
-            Pedido pedidoSalva = repository.save(pedidoPersistidoBd.get());
-            return ResponseEntity.ok(pedidoSalva);
-        }
-
-        return ResponseEntity.notFound().build();
+        return service.create(pedidoPersistidoBd);
     }
     @DeleteMapping(value = "/{pedidoId}")
-    public ResponseEntity<Pedido> delete(@PathVariable Long pedidoId) {
-
-        try {
-            service.delete(pedidoId);
-            return ResponseEntity.noContent().build();
-
-        } catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.notFound().build();
-
-        }catch (EntidadeEmUsoException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
+    public void delete(@PathVariable Long pedidoId) {
+        service.delete(pedidoId);
     }
 }
