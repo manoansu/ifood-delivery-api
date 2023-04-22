@@ -62,4 +62,5 @@ public class CidadeController {
         service.delete(cidadeId);
 
     }
+
 }

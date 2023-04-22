@@ -9,6 +9,6 @@ public class CidadeNaoEncontradoException extends EntidadeNaoEncontradaException
     }
 
     public CidadeNaoEncontradoException(Long cidadeId) {
-        this("Não existe cadstro de estado  com código %d " + cidadeId);
+        this("Não existe cadstro de cidade  com código %d " + cidadeId);
     }
 }
