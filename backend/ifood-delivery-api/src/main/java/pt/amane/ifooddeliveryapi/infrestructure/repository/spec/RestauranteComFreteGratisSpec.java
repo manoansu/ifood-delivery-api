@@ -1,7 +1,9 @@
 package pt.amane.ifooddeliveryapi.infrestructure.repository.spec;
 
+
 import org.springframework.data.jpa.domain.Specification;
 import pt.amane.ifooddeliveryapi.domain.entities.Restaurante;
+
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;

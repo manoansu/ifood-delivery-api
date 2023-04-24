@@ -1,5 +1,6 @@
 package pt.amane.ifooddeliveryapi.domain.entities;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -7,8 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data

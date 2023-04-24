@@ -2,6 +2,7 @@ package pt.amane.ifooddeliveryapi.api.controllers;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,16 +10,19 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.*;
+import pt.amane.ifooddeliveryapi.core.validation.ValidacaoException;
 import pt.amane.ifooddeliveryapi.domain.entities.Restaurante;
 import pt.amane.ifooddeliveryapi.domain.exception.CozinhaNaoEncontradoException;
 import pt.amane.ifooddeliveryapi.domain.exception.EntidadeNaoEncontradaException;
 import pt.amane.ifooddeliveryapi.domain.exception.NegocioException;
-import pt.amane.ifooddeliveryapi.domain.exception.RestauranteNaoEncontradoException;
 import pt.amane.ifooddeliveryapi.domain.repositories.RestauranteRepository;
 import pt.amane.ifooddeliveryapi.domain.services.CadastroRestauranteService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +37,9 @@ public class RestauranteController {
     @Autowired
     private CadastroRestauranteService service;
 
+    @Autowired
+    private SmartValidator validator;
+
     @GetMapping
     public List<Restaurante> findAll() {
         return repository.findAll();
@@ -44,7 +51,7 @@ public class RestauranteController {
     }
 
     @PostMapping
-    public Restaurante create(@RequestBody Restaurante restaurante) {
+    public Restaurante create(@RequestBody @Valid Restaurante restaurante) {
         try {
             return service.create(restaurante);
         } catch (EntidadeNaoEncontradaException e) {
@@ -53,7 +60,7 @@ public class RestauranteController {
     }
 
     @PutMapping("/{restauranteId}")
-    public Restaurante update(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
+    public Restaurante update(@PathVariable Long restauranteId, @RequestBody @Valid Restaurante restaurante) {
 
         Restaurante restaurantePersistidoBd = service.findById(restauranteId);
 
@@ -73,11 +80,17 @@ public class RestauranteController {
         Restaurante restaurantePersistoidoBd = service.findById(restauranteId);
 
         merge(campos, restaurantePersistoidoBd, request);
+        validate(restaurantePersistoidoBd, "restaurante");
 
-        try {
-            return update(restauranteId, restaurantePersistoidoBd);
-        } catch (RestauranteNaoEncontradoException e) {
-            throw new NegocioException(e.getMessage());
+        return update(restauranteId, restaurantePersistoidoBd);
+    }
+
+    private void validate(Restaurante restaurante, String objectName) {
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(restaurante, objectName);
+        validator.validate(restaurante, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidacaoException(bindingResult);
         }
     }
 

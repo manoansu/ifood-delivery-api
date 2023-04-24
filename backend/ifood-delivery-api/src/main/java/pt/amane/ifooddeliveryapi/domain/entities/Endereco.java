@@ -1,11 +1,13 @@
 package pt.amane.ifooddeliveryapi.domain.entities;
 
+
 import lombok.Data;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
 
 @Data
 @Embeddable

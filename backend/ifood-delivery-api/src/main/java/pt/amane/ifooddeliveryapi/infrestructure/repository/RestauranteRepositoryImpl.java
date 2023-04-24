@@ -1,5 +1,6 @@
 package pt.amane.ifooddeliveryapi.infrestructure.repository;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;

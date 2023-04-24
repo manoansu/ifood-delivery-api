@@ -9,6 +9,7 @@ import pt.amane.ifooddeliveryapi.domain.entities.Cozinha;
 import pt.amane.ifooddeliveryapi.domain.repositories.CozinhaRepository;
 import pt.amane.ifooddeliveryapi.domain.services.CadastroCozinhaService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -33,12 +34,12 @@ public class CozinhaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cozinha create(@RequestBody Cozinha cozinha) {
+    public Cozinha create(@Valid @RequestBody Cozinha cozinha) {
         return service.create(cozinha);
     }
 
     @PutMapping("/{cozinhaId}")
-    public Cozinha update(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
+    public Cozinha update(@PathVariable Long cozinhaId, @RequestBody @Valid Cozinha cozinha) {
 
         Cozinha cozinhaPersistidoBd = service.findById(cozinhaId);
 

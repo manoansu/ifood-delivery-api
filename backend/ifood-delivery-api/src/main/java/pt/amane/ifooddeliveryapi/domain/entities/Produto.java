@@ -1,5 +1,6 @@
 package pt.amane.ifooddeliveryapi.domain.entities;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -1,5 +1,6 @@
 package pt.amane.ifooddeliveryapi.api.controllers;
 
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import pt.amane.ifooddeliveryapi.domain.exception.NegocioException;
 import pt.amane.ifooddeliveryapi.domain.repositories.CidadeRepository;
 import pt.amane.ifooddeliveryapi.domain.services.CadastroCidadeService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -35,7 +37,7 @@ public class CidadeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cidade create(@RequestBody Cidade cidade) {
+    public Cidade create(@RequestBody @Valid Cidade cidade) {
 
         try {
             return service.create(cidade);
@@ -46,7 +48,7 @@ public class CidadeController {
 
     @PutMapping("/{cidadeId}")
     public Cidade atualizar(@PathVariable Long cidadeId,
-                            @RequestBody Cidade cidade) {
+                            @RequestBody @Valid Cidade cidade) {
         Cidade cidadeAtual = service.findById(cidadeId);
 
         BeanUtils.copyProperties(cidade, cidadeAtual, "id");

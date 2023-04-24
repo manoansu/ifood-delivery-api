@@ -1,5 +1,6 @@
 package pt.amane.ifooddeliveryapi.api.controllers;
 
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import pt.amane.ifooddeliveryapi.domain.entities.Estado;
 import pt.amane.ifooddeliveryapi.domain.repositories.EstadoRepository;
 import pt.amane.ifooddeliveryapi.domain.services.CadastroEstadoService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -33,12 +35,12 @@ public class EstadoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Estado create(@RequestBody Estado estado) {
+    public Estado create(@RequestBody @Valid Estado estado) {
         return service.create(estado);
     }
 
     @PutMapping("/{estadoId}")
-    public Estado update(@PathVariable Long estadoId, @RequestBody Estado estado) {
+    public Estado update(@PathVariable Long estadoId, @RequestBody @Valid Estado estado) {
         Estado estadoPersistidoBd = service.findById(estadoId);
 
         BeanUtils.copyProperties(estado, estadoPersistidoBd, "id");
