@@ -27,6 +27,7 @@ public class CadastroCidadeService {
                 .orElseThrow(() -> new CidadeNaoEncontradoException(id));
     }
 
+    @Transactional(readOnly = true)
     public Cidade create(Cidade cidade) {
 
         Long estadoId = cidade.getEstado().getId();
@@ -37,6 +38,7 @@ public class CadastroCidadeService {
         return repository.save(cidade);
     }
 
+    @Transactional(readOnly = true)
     public void delete(Long id) {
         try {
             repository.deleteById(id);

@@ -23,10 +23,12 @@ public class CadastroPermissaoService {
                 .orElseThrow(() -> new PermissaoNaoEncontradoException(id));
     }
 
+    @Transactional(readOnly = true)
     public Permissao create(Permissao permissao) {
         return repository.save(permissao);
     }
 
+    @Transactional(readOnly = true)
     public void delete(Long id) {
         try {
             repository.deleteById(id);

@@ -1,7 +1,6 @@
 package pt.amane.ifooddeliveryapi.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -58,7 +57,6 @@ public class Restaurante implements Serializable {
     @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private Instant dataAtualizacao;
 
-    @JsonIgnore
     @Embedded
     private Endereco endereco;
 
@@ -69,19 +67,18 @@ public class Restaurante implements Serializable {
     @JoinColumn(nullable = false)
     private Cozinha cozinha;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "restaurante")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurante", cascade = CascadeType.ALL)
     private List<Produto> produtos = new ArrayList<>();
 
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "restaurante_forma_pagamento",
         joinColumns = @JoinColumn(name = "restaurante_id"),
         inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
     private Set<FormaPagamento> formasPagamento = new HashSet<>();
 
     @JsonIgnore
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Usuario> responsaveis = new ArrayList<>();
 
     @PrePersist

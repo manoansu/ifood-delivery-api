@@ -1,11 +1,14 @@
 package pt.amane.ifooddeliveryapi.api.controllers;
 
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import pt.amane.ifooddeliveryapi.api.assembler.EstadoDTOAssembler;
+import pt.amane.ifooddeliveryapi.api.assembler.EstadoInputDataDisassembler;
+import pt.amane.ifooddeliveryapi.api.model.modeldto.EstadoDTO;
+import pt.amane.ifooddeliveryapi.api.model.modeldto.inputData.EstadoInputData;
 import pt.amane.ifooddeliveryapi.domain.entities.Estado;
 import pt.amane.ifooddeliveryapi.domain.repositories.EstadoRepository;
 import pt.amane.ifooddeliveryapi.domain.services.CadastroEstadoService;
@@ -23,32 +26,52 @@ public class EstadoController {
     @Autowired
     private CadastroEstadoService service;
 
+    @Autowired
+    private EstadoDTOAssembler estadoDTOAssembler;
+
+    @Autowired
+    private EstadoInputDataDisassembler estadoInputDataDisassembler;
+
     @GetMapping
-    public List<Estado> findAll() {
-        return repository.findAll();
+    public List<EstadoDTO> findAll() {
+        List<Estado> todosEstados = repository.findAll();
+
+        return estadoDTOAssembler.toCollectionModel(todosEstados);
     }
 
-    @GetMapping(value = "/{estadoId}")
-    public Estado findById(@PathVariable Long estadoId) {
-        return service.findById(estadoId);
+    @GetMapping("/{estadoId}")
+    public EstadoDTO findById(@PathVariable Long estadoId) {
+        Estado estado = service.findById(estadoId);
+
+        return estadoDTOAssembler.toModel(estado);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Estado create(@RequestBody @Valid Estado estado) {
-        return service.create(estado);
+    public EstadoDTO create(@RequestBody @Valid EstadoInputData estadoInputData) {
+        Estado estado = estadoInputDataDisassembler.toDomainObject(estadoInputData);
+
+        estado = service.create(estado);
+
+        return estadoDTOAssembler.toModel(estado);
     }
 
     @PutMapping("/{estadoId}")
-    public Estado update(@PathVariable Long estadoId, @RequestBody @Valid Estado estado) {
-        Estado estadoPersistidoBd = service.findById(estadoId);
+    public EstadoDTO upadate(@PathVariable Long estadoId,
+                                 @RequestBody @Valid EstadoInputData estadoInputData) {
+        Estado estadoAtual = service.findById(estadoId);
 
-        BeanUtils.copyProperties(estado, estadoPersistidoBd, "id");
+        estadoInputDataDisassembler.copyToDomainObject(estadoInputData, estadoAtual);
 
-        return service.create(estadoPersistidoBd);
+        estadoAtual = service.create(estadoAtual);
+
+        return estadoDTOAssembler.toModel(estadoAtual);
     }
-    @DeleteMapping(value = "/{estadoId}")
-    public void delete(@PathVariable Long estadoId) {
-        service.remover(estadoId);
+
+    @DeleteMapping("/{estadoId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long estadoId) {
+        service.delete(estadoId);
     }
+
 }

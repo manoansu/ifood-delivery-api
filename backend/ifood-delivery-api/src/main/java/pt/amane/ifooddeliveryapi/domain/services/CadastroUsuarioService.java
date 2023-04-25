@@ -23,10 +23,12 @@ public class CadastroUsuarioService {
                 .orElseThrow(() -> new UsuarioNaoEncontradoException(id));
     }
 
+    @Transactional(readOnly = true)
     public Usuario create(Usuario usuario) {
         return repository.save(usuario);
     }
 
+    @Transactional(readOnly = true)
     public void delete(Long id) {
         try {
             repository.deleteById(id);

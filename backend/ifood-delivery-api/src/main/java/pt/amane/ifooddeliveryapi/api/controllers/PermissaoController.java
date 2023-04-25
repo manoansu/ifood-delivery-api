@@ -1,14 +1,18 @@
 package pt.amane.ifooddeliveryapi.api.controllers;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import pt.amane.ifooddeliveryapi.api.assembler.PermissaoDTOAssembler;
+import pt.amane.ifooddeliveryapi.api.assembler.PermissaoInputDataDisassembler;
+import pt.amane.ifooddeliveryapi.api.model.modeldto.PermissaoDTO;
+import pt.amane.ifooddeliveryapi.api.model.modeldto.inputData.PermissaoInputData;
 import pt.amane.ifooddeliveryapi.domain.entities.Permissao;
 import pt.amane.ifooddeliveryapi.domain.repositories.PermissaoRepository;
 import pt.amane.ifooddeliveryapi.domain.services.CadastroPermissaoService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,32 +25,49 @@ public class PermissaoController {
     @Autowired
     private CadastroPermissaoService service;
 
+    @Autowired
+    private PermissaoDTOAssembler permissaoDTOAssembler;
+
+    @Autowired
+    private PermissaoInputDataDisassembler permissaoInputDataDisassembler;
+
     @GetMapping
-    public List<Permissao> findAll() {
-        return repository.findAll();
+    public List<PermissaoDTO> findAll() {
+        List<Permissao> permissoes = repository.findAll();
+
+        return permissaoDTOAssembler.toCollectionModel(permissoes);
     }
 
-    @GetMapping(value = "/{permissaoId}")
-    public Permissao findById(@PathVariable Long permissaoId) {
-        return service.findById(permissaoId);
+    @GetMapping("/{permissaoId}")
+    public PermissaoDTO findById(@PathVariable Long permissaoId) {
+        Permissao permissao = service.findById(permissaoId);
+
+        return permissaoDTOAssembler.toModel(permissao);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Permissao create(@RequestBody Permissao permissao) {
-        return service.create(permissao);
+    public PermissaoDTO create(@RequestBody @Valid PermissaoInputData permissaoInputData) {
+        Permissao permissao = permissaoInputDataDisassembler.toDomainObject(permissaoInputData);
+        permissao = service.create(permissao);
+
+        return permissaoDTOAssembler.toModel(permissao);
     }
 
     @PutMapping("/{permissaoId}")
-    public Permissao update(@PathVariable Long permissaoId, @RequestBody Permissao permissao) {
-        Permissao permissaoPersistidoBd = service.findById(permissaoId);
+    public PermissaoDTO upadate(@PathVariable Long permissaoId,
+                              @RequestBody @Valid PermissaoInputData permissaoInputData) {
+        Permissao permissaoAtual = service.findById(permissaoId);
+        permissaoInputDataDisassembler.copyToDomainObject(permissaoInputData, permissaoAtual);
+        permissaoAtual = service.create(permissaoAtual);
 
-        BeanUtils.copyProperties(permissao, permissaoPersistidoBd, "id");
-
-        return service.create(permissaoPersistidoBd);
+        return permissaoDTOAssembler.toModel(permissaoAtual);
     }
-    @DeleteMapping(value = "/{permissaoId}")
+
+    @DeleteMapping("/{permissaoId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long permissaoId) {
         service.delete(permissaoId);
     }
+
 }

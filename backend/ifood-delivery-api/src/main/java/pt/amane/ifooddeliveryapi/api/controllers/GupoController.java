@@ -1,15 +1,18 @@
 package pt.amane.ifooddeliveryapi.api.controllers;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import pt.amane.ifooddeliveryapi.domain.entities.Cidade;
+import pt.amane.ifooddeliveryapi.api.assembler.GrupoDTOAssembler;
+import pt.amane.ifooddeliveryapi.api.assembler.GrupoInputDataDisassembler;
+import pt.amane.ifooddeliveryapi.api.model.modeldto.GrupoDTO;
+import pt.amane.ifooddeliveryapi.api.model.modeldto.inputData.GrupoInputData;
 import pt.amane.ifooddeliveryapi.domain.entities.Grupo;
 import pt.amane.ifooddeliveryapi.domain.repositories.GrupoRepository;
 import pt.amane.ifooddeliveryapi.domain.services.CadastroGruoService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,32 +25,49 @@ public class GupoController {
     @Autowired
     private CadastroGruoService service;
 
+    @Autowired
+    private GrupoDTOAssembler grupoDTOAssembler;
+
+    @Autowired
+    private GrupoInputDataDisassembler grupoInputDataDisassembler;
+
     @GetMapping
-    public List<Grupo> findAll() {
-        return repository.findAll();
+    public List<GrupoDTO> findAll() {
+        List<Grupo> grupos = repository.findAll();
+
+        return grupoDTOAssembler.toCollectionModel(grupos);
     }
 
-    @GetMapping(value = "/{grupoId}")
-    public Grupo findById(@PathVariable Long grupoId) {
-        return service.findById(grupoId);
+    @GetMapping("/{grupoId}")
+    public GrupoDTO findById(@PathVariable Long grupoId) {
+        Grupo grupo = service.findById(grupoId);
+
+        return grupoDTOAssembler.toModel(grupo);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Grupo create(@RequestBody Grupo grupo) {
-        return service.create(grupo);
+    public GrupoDTO create(@RequestBody @Valid GrupoInputData grupoInputData) {
+        Grupo grupo = grupoInputDataDisassembler.toDomainObject(grupoInputData);
+        grupo = service.create(grupo);
+
+        return grupoDTOAssembler.toModel(grupo);
     }
 
     @PutMapping("/{grupoId}")
-    public Grupo update(@PathVariable Long grupoId, @RequestBody Cidade cidade) {
-        Grupo grupoPersistidoBd = service.findById(grupoId);
+    public GrupoDTO upadate(@PathVariable Long grupoId,
+                              @RequestBody @Valid GrupoInputData grupoInputData) {
+        Grupo grupoAtual = service.findById(grupoId);
+        grupoInputDataDisassembler.copyToDomainObject(grupoInputData, grupoAtual);
+        grupoAtual = service.create(grupoAtual);
 
-        BeanUtils.copyProperties(cidade, grupoPersistidoBd, "id");
+        return grupoDTOAssembler.toModel(grupoAtual);
+    }
 
-        return service.create(grupoPersistidoBd);
+    @DeleteMapping("/{grupoId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long cozinhaId) {
+        service.delete(cozinhaId);
     }
-    @DeleteMapping(value = "/{grupoId}")
-    public void delete(@PathVariable Long grupoId) {
-        service.delete(grupoId);
-    }
+
 }

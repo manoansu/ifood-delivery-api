@@ -24,10 +24,12 @@ public class CadastroGruoService {
                 .orElseThrow(() -> new GrupoNaoEncontradoException(id));
     }
 
+    @Transactional(readOnly = true)
     public Grupo create(Grupo grupo) {
         return repository.save(grupo);
     }
 
+    @Transactional(readOnly = true)
     public void delete(Long id) {
         try {
             repository.deleteById(id);

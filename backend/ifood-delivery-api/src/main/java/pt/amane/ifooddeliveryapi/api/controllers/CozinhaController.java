@@ -1,10 +1,13 @@
 package pt.amane.ifooddeliveryapi.api.controllers;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import pt.amane.ifooddeliveryapi.api.assembler.CozinhaDTOAssembler;
+import pt.amane.ifooddeliveryapi.api.assembler.CozinhaInputDataDisassembler;
+import pt.amane.ifooddeliveryapi.api.model.modeldto.CozinhaDTO;
+import pt.amane.ifooddeliveryapi.api.model.modeldto.inputData.CozinhaInputData;
 import pt.amane.ifooddeliveryapi.domain.entities.Cozinha;
 import pt.amane.ifooddeliveryapi.domain.repositories.CozinhaRepository;
 import pt.amane.ifooddeliveryapi.domain.services.CadastroCozinhaService;
@@ -22,35 +25,49 @@ public class CozinhaController {
     @Autowired
     private CadastroCozinhaService service;
 
+    @Autowired
+    private CozinhaDTOAssembler cozinhaDTOAssembler;
+
+    @Autowired
+    private CozinhaInputDataDisassembler cozinhaInputDataDisassembler;
+
     @GetMapping
-    public List<Cozinha> findAll() {
-        return repository.findAll();
+    public List<CozinhaDTO> findAll() {
+        List<Cozinha> todasCozinhas = repository.findAll();
+
+        return cozinhaDTOAssembler.toCollectionModel(todasCozinhas);
     }
 
-    @GetMapping(value = "/{cozinhaId}")
-    public Cozinha findById(@PathVariable Long cozinhaId) {
-       return service.findById(cozinhaId);
+    @GetMapping("/{cozinhaId}")
+    public CozinhaDTO findById(@PathVariable Long cozinhaId) {
+        Cozinha cozinha = service.findById(cozinhaId);
+
+        return cozinhaDTOAssembler.toModel(cozinha);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cozinha create(@Valid @RequestBody Cozinha cozinha) {
-        return service.create(cozinha);
+    public CozinhaDTO create(@RequestBody @Valid CozinhaInputData cozinhaInputData) {
+        Cozinha cozinha = cozinhaInputDataDisassembler.toDomainObject(cozinhaInputData);
+        cozinha = service.create(cozinha);
+
+        return cozinhaDTOAssembler.toModel(cozinha);
     }
 
     @PutMapping("/{cozinhaId}")
-    public Cozinha update(@PathVariable Long cozinhaId, @RequestBody @Valid Cozinha cozinha) {
+    public CozinhaDTO upadate(@PathVariable Long cozinhaId,
+                                  @RequestBody @Valid CozinhaInputData cozinhaInputData) {
+        Cozinha cozinhaAtual = service.findById(cozinhaId);
+        cozinhaInputDataDisassembler.copyToDomainObject(cozinhaInputData, cozinhaAtual);
+        cozinhaAtual = service.create(cozinhaAtual);
 
-        Cozinha cozinhaPersistidoBd = service.findById(cozinhaId);
-
-        BeanUtils.copyProperties(cozinha, cozinhaPersistidoBd, "id");
-
-        return service.create(cozinhaPersistidoBd);
+        return cozinhaDTOAssembler.toModel(cozinhaAtual);
     }
 
-    @DeleteMapping(value = "/{cozinhaId}")
+    @DeleteMapping("/{cozinhaId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long cozinhaId) {
         service.delete(cozinhaId);
     }
+
 }

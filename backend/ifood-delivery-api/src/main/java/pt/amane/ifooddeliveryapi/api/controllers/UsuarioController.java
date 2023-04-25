@@ -1,14 +1,18 @@
 package pt.amane.ifooddeliveryapi.api.controllers;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import pt.amane.ifooddeliveryapi.api.assembler.UsuarioDTOAssembler;
+import pt.amane.ifooddeliveryapi.api.assembler.UsuarioInputDataDisassembler;
+import pt.amane.ifooddeliveryapi.api.model.modeldto.UsuarioDTO;
+import pt.amane.ifooddeliveryapi.api.model.modeldto.inputData.UsuarioInputData;
 import pt.amane.ifooddeliveryapi.domain.entities.Usuario;
 import pt.amane.ifooddeliveryapi.domain.repositories.UsuarioRepository;
 import pt.amane.ifooddeliveryapi.domain.services.CadastroUsuarioService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,32 +25,49 @@ public class UsuarioController {
     @Autowired
     private CadastroUsuarioService service;
 
+    @Autowired
+    private UsuarioDTOAssembler usuarioDTOAssembler;
+
+    @Autowired
+    private UsuarioInputDataDisassembler usuarioInputDataDisassembler;
+
     @GetMapping
-    public List<Usuario> findAll() {
-        return repository.findAll();
+    public List<UsuarioDTO> findAll() {
+        List<Usuario> usuarios = repository.findAll();
+
+        return usuarioDTOAssembler.toCollectionModel(usuarios);
     }
 
-    @GetMapping(value = "/{usuarioId}")
-    public Usuario findById(@PathVariable Long usuarioId) {
-        return service.findById(usuarioId);
+    @GetMapping("/{usuarioId}")
+    public UsuarioDTO findById(@PathVariable Long usuarioId) {
+        Usuario usuario = service.findById(usuarioId);
+
+        return usuarioDTOAssembler.toModel(usuario);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Usuario create(@RequestBody Usuario usuario) {
-        return service.create(usuario);
+    public UsuarioDTO create(@RequestBody @Valid UsuarioInputData usuarioInputData) {
+        Usuario usuario = usuarioInputDataDisassembler.toDomainObject(usuarioInputData);
+        usuario = service.create(usuario);
+
+        return usuarioDTOAssembler.toModel(usuario);
     }
 
     @PutMapping("/{usuarioId}")
-    public Usuario update(@PathVariable Long usuarioId, @RequestBody Usuario usuario) {
-        Usuario usuarioPersistidoBd = service.findById(usuarioId);
+    public UsuarioDTO upadate(@PathVariable Long usuarioId,
+                              @RequestBody @Valid UsuarioInputData usuarioInputData) {
+        Usuario usuarioAtual = service.findById(usuarioId);
+        usuarioInputDataDisassembler.copyToDomainObject(usuarioInputData, usuarioAtual);
+        usuarioAtual = service.create(usuarioAtual);
 
-        BeanUtils.copyProperties(usuario, usuarioPersistidoBd, "id");
-
-        return service.create(usuarioPersistidoBd);
+        return usuarioDTOAssembler.toModel(usuarioAtual);
     }
-    @DeleteMapping(value = "/{usuarioId}")
+
+    @DeleteMapping("/{usuarioId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long usuarioId) {
         service.delete(usuarioId);
     }
+
 }

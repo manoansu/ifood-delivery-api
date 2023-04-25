@@ -37,6 +37,10 @@ public class Usuario implements Serializable {
     @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private Instant dataAtualizacao;
 
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Restaurante restaurante;
+
     @ManyToMany
     @JoinTable(name = "usuario_gruppo",
             joinColumns = @JoinColumn(name = "usuario_id"),

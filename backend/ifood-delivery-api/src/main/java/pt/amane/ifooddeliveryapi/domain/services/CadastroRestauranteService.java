@@ -28,6 +28,7 @@ public class CadastroRestauranteService {
                 .orElseThrow(() -> new RestauranteNaoEncontradoException(id));
     }
 
+    @Transactional(readOnly = true)
     public Restaurante create(Restaurante restaurante) {
         Long cozinhaId = restaurante.getCozinha().getId();
 
@@ -38,6 +39,7 @@ public class CadastroRestauranteService {
         return repository.save(restaurante);
     }
 
+    @Transactional(readOnly = true)
     public void delete(Long id) {
         try {
             repository.deleteById(id);

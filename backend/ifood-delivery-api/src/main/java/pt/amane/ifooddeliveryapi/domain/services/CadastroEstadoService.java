@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pt.amane.ifooddeliveryapi.domain.entities.Estado;
 import pt.amane.ifooddeliveryapi.domain.exception.EntidadeEmUsoException;
-import pt.amane.ifooddeliveryapi.domain.exception.EntidadeNaoEncontradaException;
 import pt.amane.ifooddeliveryapi.domain.exception.EstadoNaoEncontradoException;
 import pt.amane.ifooddeliveryapi.domain.repositories.EstadoRepository;
 
@@ -25,11 +24,13 @@ public class CadastroEstadoService {
                 .orElseThrow(() -> new EstadoNaoEncontradoException(id));
     }
 
+    @Transactional(readOnly = true)
     public Estado create(Estado estado) {
         return repository.save(estado);
     }
 
-    public void remover(Long id) {
+    @Transactional(readOnly = true)
+    public void delete(Long id) {
         try {
             repository.deleteById(id);
 

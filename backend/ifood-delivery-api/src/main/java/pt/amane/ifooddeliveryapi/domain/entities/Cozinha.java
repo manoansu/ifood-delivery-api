@@ -1,8 +1,5 @@
 package pt.amane.ifooddeliveryapi.domain.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -36,7 +33,6 @@ public class Cozinha implements Serializable {
     @Column(nullable = false)
     private String nome;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "cozinha")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "cozinha", cascade = CascadeType.ALL)
     private List<Restaurante> restaurantes = new ArrayList<>();
 }

@@ -23,10 +23,12 @@ public class CadastroCozinhaService {
                 .orElseThrow(() -> new CozinhaNaoEncontradoException(id));
     }
 
+    @Transactional(readOnly = true)
     public Cozinha create(Cozinha cozinha) {
         return repository.save(cozinha);
     }
 
+    @Transactional(readOnly = true)
     public void delete(Long id) {
         try {
             repository.deleteById(id);

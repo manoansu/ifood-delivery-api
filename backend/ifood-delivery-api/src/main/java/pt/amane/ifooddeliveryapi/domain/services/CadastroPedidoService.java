@@ -24,10 +24,12 @@ public class CadastroPedidoService {
                 .orElseThrow(() -> new PedidoNaoEncontradoException(id));
     }
 
+    @Transactional(readOnly = true)
     public Pedido create(Pedido pedido) {
         return repository.save(pedido);
     }
 
+    @Transactional(readOnly = true)
     public void delete(Long id) {
         try {
             repository.deleteById(id);

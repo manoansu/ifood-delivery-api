@@ -23,10 +23,12 @@ public class CadastroProdutoService {
                 .orElseThrow(() -> new ProdutoNaoEncontradoException(id));
     }
 
+    @Transactional(readOnly = true)
     public Produto create(Produto produto) {
         return repository.save(produto);
     }
 
+    @Transactional(readOnly = true)
     public void delete(Long id) {
         try {
             repository.deleteById(id);

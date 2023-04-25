@@ -24,10 +24,12 @@ public class CadastroFormaPagamentoService {
                 .orElseThrow(() -> new FormaPagamentoNaoEncontradoException(id));
     }
 
+    @Transactional(readOnly = true)
     public FormaPagamento create(FormaPagamento formaPagamento) {
         return repository.save(formaPagamento);
     }
 
+    @Transactional(readOnly = true)
     public void delete(Long id) {
         try {
             repository.deleteById(id);
