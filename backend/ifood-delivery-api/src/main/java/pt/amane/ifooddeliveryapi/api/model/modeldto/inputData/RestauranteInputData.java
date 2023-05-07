@@ -42,7 +42,7 @@ public class RestauranteInputData {
     @Valid
     @NotNull
     private CozinhaId cozinha;
-    private Endereco endereco;
+    private EnderecoInputData endereco;
 
     private List<Produto> produtos = new ArrayList<>();
 

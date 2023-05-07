@@ -35,7 +35,6 @@ public class Cidade implements Serializable {
 
     @Valid
     @ConvertGroup(from = Default.class, to = Groups.EstadoId.class)
-
     @NotNull
     @ManyToOne
     @JoinColumn(nullable = false)

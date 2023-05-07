@@ -24,7 +24,7 @@ public class UsuarioInputDataDisassembler {
     public void copyToDomainObject(UsuarioInputData usuarioInputData, Usuario usuario) {
         // Para evitar exception quando queremos atualizar o id da Restaurante existente na classe Usuario para outro id.
         // vamos te que instancia restaurante dentro do set restaurante.
-        usuario.setRestaurante(new Restaurante());
+//        usuario.setRestaurante(new Restaurante());
         modelMapper.map(usuarioInputData, usuario);
     }
 

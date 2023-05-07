@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import pt.amane.ifooddeliveryapi.api.model.modeldto.PermissaoDTO;
 import pt.amane.ifooddeliveryapi.domain.entities.Permissao;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,7 @@ public class PermissaoDTOAssembler {
      * @param permissoes
      * @return permissaoDTOs
      */
-    public List<PermissaoDTO> toCollectionModel(List<Permissao> permissoes) {
+    public List<PermissaoDTO> toCollectionModel(Collection<Permissao> permissoes) {
         return permissoes.stream()
                 .map(restaurante -> toModel(restaurante))
                 .collect(Collectors.toList());

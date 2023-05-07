@@ -31,7 +31,7 @@ public class PedidoDTOAssembler {
      */
     public List<PedidoDTO> toCollectionModel(List<Pedido> pedidos) {
         return pedidos.stream()
-                .map(restaurante -> toModel(restaurante))
+                .map(pedido -> toModel(pedido))
                 .collect(Collectors.toList());
     }
 }

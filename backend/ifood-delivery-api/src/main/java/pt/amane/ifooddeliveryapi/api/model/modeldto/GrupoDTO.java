@@ -20,5 +20,5 @@ public class GrupoDTO implements Serializable {
 
     private String nome;
 
-    private Set<Permissao> permissoes = new HashSet<>();
+//    private Set<Permissao> permissoes = new HashSet<>();
 }

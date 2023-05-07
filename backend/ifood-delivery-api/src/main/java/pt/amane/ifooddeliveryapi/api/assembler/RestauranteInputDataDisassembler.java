@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pt.amane.ifooddeliveryapi.api.model.modeldto.inputData.RestauranteInputData;
+import pt.amane.ifooddeliveryapi.domain.entities.Cidade;
 import pt.amane.ifooddeliveryapi.domain.entities.Cozinha;
 import pt.amane.ifooddeliveryapi.domain.entities.Restaurante;
 
@@ -25,6 +26,10 @@ public class RestauranteInputDataDisassembler {
         // Para evitar exception quando queremos atualizar o id da Cozinha existente na classe Restaurante para outro id.
         // vamos te que instancia Cozinha dentro do set restaurante.
         restaurante.setCozinha(new Cozinha());
+
+        if (restaurante.getEndereco() != null) {
+            restaurante.getEndereco().setCidade(new Cidade());
+        }
         modelMapper.map(restauranteInputData, restaurante);
     }
 

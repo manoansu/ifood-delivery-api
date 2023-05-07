@@ -49,7 +49,9 @@ public class Restaurante implements Serializable {
     @Multiplo(numero = 5)
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
-    private Boolean ativo;
+    private Boolean ativo = Boolean.TRUE;
+
+    private Boolean aberto = Boolean.FALSE;
 
     @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private Instant dataCadastro;
@@ -78,8 +80,11 @@ public class Restaurante implements Serializable {
     private Set<FormaPagamento> formasPagamento = new HashSet<>();
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Usuario> responsaveis = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "restaurante_usuario_responsavel",
+            joinColumns = @JoinColumn(name = "restaurante_id"),
+            inverseJoinColumns = @JoinColumn(name = "usuario_id"))
+    private Set<Usuario> responsaveis = new HashSet<>();
 
     @PrePersist
     public void prePersist(){
@@ -89,6 +94,46 @@ public class Restaurante implements Serializable {
     @PreUpdate
     public void PreUpdate(){
         this.dataAtualizacao = Instant.now();
+    }
+
+    public void ativar() {
+        setAtivo(true);
+    }
+
+    public void inativar() {
+        setAtivo(false);
+    }
+
+    public boolean removerFormaPagamento(FormaPagamento formaPagamento) {
+        return getFormasPagamento().remove(formaPagamento);
+    }
+
+    public boolean adicionarFormaPagamento(FormaPagamento formaPagamento) {
+        return getFormasPagamento().add(formaPagamento);
+    }
+
+    public void abrir() {
+        setAberto(true);
+    }
+
+    public void fechar() {
+        setAberto(false);
+    }
+
+    public boolean removerResponsavel(Usuario usuario) {
+        return getResponsaveis().remove(usuario);
+    }
+
+    public boolean adicionarResponsavel(Usuario usuario) {
+        return getResponsaveis().add(usuario);
+    }
+
+    public boolean aceitaFormaPagamento(FormaPagamento formaPagamento) {
+        return getFormasPagamento().contains(formaPagamento);
+    }
+
+    public boolean naoAceitaFormaPagamento(FormaPagamento formaPagamento) {
+        return !aceitaFormaPagamento(formaPagamento);
     }
 
 }

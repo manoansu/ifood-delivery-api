@@ -27,12 +27,14 @@ public class RestauranteDTO implements Serializable {
     private BigDecimal taxaFrete;
     private Boolean ativo;
 
+    private Boolean aberto;
+
     private Instant dataCadastro;
 
     private Instant dataAtualizacao;
 
     private CozinhaDTO cozinha;
-    private Endereco endereco;
+    private EnderecoDTO endereco;
 
     private List<Produto> produtos = new ArrayList<>();
 

@@ -4,16 +4,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class ItemPedidoInputData {
 
+    @NotNull
+    private Long produtoId;
+
+    @NotNull
+    @PositiveOrZero
     private Integer quantidade;
-    private BigDecimal precoUnitario;
-    private BigDecimal precoTotal;
-    private String observacao;
+
+    private String observaca;
 
 }

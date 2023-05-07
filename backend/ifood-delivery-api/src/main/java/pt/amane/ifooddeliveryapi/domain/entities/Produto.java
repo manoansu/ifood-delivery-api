@@ -28,8 +28,10 @@ public class Produto implements Serializable {
     @Column(nullable = false)
     private String descricao;
 
+    @Column(nullable = false)
     private BigDecimal preco;
 
+    @Column(nullable = false)
     private Boolean ativo;
 
     @ManyToOne

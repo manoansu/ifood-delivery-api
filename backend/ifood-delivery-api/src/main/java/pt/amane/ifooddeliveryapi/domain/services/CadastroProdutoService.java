@@ -18,9 +18,9 @@ public class CadastroProdutoService {
     private ProdutoRepository repository;
 
     @Transactional(readOnly = true)
-    public Produto findById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new ProdutoNaoEncontradoException(id));
+    public Produto findById(Long restauranteId, Long produtoId) {
+        return repository.findById(restauranteId, produtoId)
+                .orElseThrow(() -> new ProdutoNaoEncontradoException(restauranteId, produtoId));
     }
 
     @Transactional(readOnly = true)
@@ -28,17 +28,19 @@ public class CadastroProdutoService {
         return repository.save(produto);
     }
 
-    @Transactional(readOnly = true)
-    public void delete(Long id) {
-        try {
-            repository.deleteById(id);
-
-        }catch (EmptyResultDataAccessException e) {
-            throw new ProdutoNaoEncontradoException(id);
-
-        }catch (DataIntegrityViolationException e) {
-            throw new EntidadeEmUsoException(
-            String.format(MSG_PRODUTO_EM_USO, id));
-        }
-    }
+//    @Transactional(readOnly = true)
+//    public void delete(Long id) {
+//        try {
+//            repository.deleteById(id);
+//            // Executa/descarrega todas as alterações/mudanças pendente na base de dado.
+//            repository.flush();
+//
+//        }catch (EmptyResultDataAccessException e) {
+//            throw new ProdutoNaoEncontradoException(id);
+//
+//        }catch (DataIntegrityViolationException e) {
+//            throw new EntidadeEmUsoException(
+//            String.format(MSG_PRODUTO_EM_USO, id));
+//        }
+//    }
 }

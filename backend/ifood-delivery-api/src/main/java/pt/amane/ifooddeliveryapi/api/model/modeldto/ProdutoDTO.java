@@ -3,7 +3,6 @@ package pt.amane.ifooddeliveryapi.api.model.modeldto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pt.amane.ifooddeliveryapi.domain.entities.Restaurante;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -25,5 +24,4 @@ public class ProdutoDTO implements Serializable {
 
     private Boolean ativo;
 
-    private Restaurante restaurante;
 }

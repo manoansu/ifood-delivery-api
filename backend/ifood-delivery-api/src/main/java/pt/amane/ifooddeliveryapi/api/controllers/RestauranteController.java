@@ -10,9 +10,7 @@ import pt.amane.ifooddeliveryapi.api.assembler.RestauranteInputDataDisassembler;
 import pt.amane.ifooddeliveryapi.api.model.modeldto.RestauranteDTO;
 import pt.amane.ifooddeliveryapi.api.model.modeldto.inputData.RestauranteInputData;
 import pt.amane.ifooddeliveryapi.domain.entities.Restaurante;
-import pt.amane.ifooddeliveryapi.domain.exception.CozinhaNaoEncontradoException;
-import pt.amane.ifooddeliveryapi.domain.exception.EntidadeNaoEncontradaException;
-import pt.amane.ifooddeliveryapi.domain.exception.NegocioException;
+import pt.amane.ifooddeliveryapi.domain.exception.*;
 import pt.amane.ifooddeliveryapi.domain.repositories.RestauranteRepository;
 import pt.amane.ifooddeliveryapi.domain.services.CadastroRestauranteService;
 
@@ -55,7 +53,7 @@ public class RestauranteController {
         try {
             Restaurante restaurante = restauranteInputDataDisassembler.toDomainObject(restauranteInputData);
             return restauranteDTOAssembler.toModel(service.create(restaurante));
-        } catch (EntidadeNaoEncontradaException e) {
+        } catch (CozinhaNaoEncontradoException | CidadeNaoEncontradoException e) {
             throw new NegocioException(e.getMessage());
         }
     }
@@ -74,7 +72,7 @@ public class RestauranteController {
 
         try {
             return restauranteDTOAssembler.toModel(service.create(restaurantePersistidoBd));
-        } catch (CozinhaNaoEncontradoException e) {
+        } catch (CozinhaNaoEncontradoException | CidadeNaoEncontradoException e) {
             throw new NegocioException(e.getMessage());
         }
     }
@@ -82,6 +80,49 @@ public class RestauranteController {
     @DeleteMapping(value = "/{restauranteId}")
     public void delete(@PathVariable Long restauranteId) {
         service.delete(restauranteId);
+    }
+
+    @PutMapping("/{restauranteId}/ativo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativar(@PathVariable Long restauranteId) {
+        service.ativar(restauranteId);
+    }
+
+    @DeleteMapping("/{restauranteId}/ativo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inativar(@PathVariable Long restauranteId) {
+        service.inativar(restauranteId);
+    }
+
+    @PutMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    private void ativarMultiplos(@RequestBody List<Long> restauranteIds) {
+        try {
+            service.ativar(restauranteIds);
+        }catch (RestauranteNaoEncontradoException e) {
+            throw new NegocioException(e.getMessage(), e);
+        }
+    }
+    @DeleteMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    private void inativarMultiplos(@RequestBody List<Long> restauranteIds) {
+        try {
+            service.inativar(restauranteIds);
+        }catch (RestauranteNaoEncontradoException e) {
+            throw new NegocioException(e.getMessage(), e);
+        }
+    }
+
+    @PutMapping("/{restauranteId}/abertura")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void abrir(@PathVariable Long restauranteId) {
+        service.abrir(restauranteId);
+    }
+
+    @PutMapping("/{restauranteId}/fechamento")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void fechar(@PathVariable Long restauranteId) {
+        service.fechar(restauranteId);
     }
 
 

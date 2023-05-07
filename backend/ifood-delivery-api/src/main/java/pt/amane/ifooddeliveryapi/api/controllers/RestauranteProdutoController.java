@@ -9,21 +9,26 @@ import pt.amane.ifooddeliveryapi.api.assembler.ProdutoInputDataDisassembler;
 import pt.amane.ifooddeliveryapi.api.model.modeldto.ProdutoDTO;
 import pt.amane.ifooddeliveryapi.api.model.modeldto.inputData.ProdutoInputData;
 import pt.amane.ifooddeliveryapi.domain.entities.Produto;
+import pt.amane.ifooddeliveryapi.domain.entities.Restaurante;
 import pt.amane.ifooddeliveryapi.domain.repositories.ProdutoRepository;
 import pt.amane.ifooddeliveryapi.domain.services.CadastroProdutoService;
+import pt.amane.ifooddeliveryapi.domain.services.CadastroRestauranteService;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/produtos", produces = MediaType.APPLICATION_JSON_VALUE)
-public class ProdutoController {
+@RequestMapping(value = "/restaurantes/{restauranteId}/produtos", produces = MediaType.APPLICATION_JSON_VALUE)
+public class RestauranteProdutoController {
 
     @Autowired
     private ProdutoRepository repository;
 
     @Autowired
     private CadastroProdutoService service;
+
+    @Autowired
+    private CadastroRestauranteService cadastroRestauranteService;
 
     @Autowired
     private ProdutoDTOAssembler produtoDTOAssembler;
@@ -39,35 +44,40 @@ public class ProdutoController {
     }
 
     @GetMapping("/{produtoId}")
-    public ProdutoDTO findById(@PathVariable Long produtoId) {
-        Produto produto = service.findById(produtoId);
+    public ProdutoDTO findById(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
+        Produto produto = service.findById(restauranteId,produtoId);
 
         return produtoDTOAssembler.toModel(produto);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProdutoDTO create(@RequestBody @Valid ProdutoInputData produtoInputData) {
+    public ProdutoDTO create(@PathVariable Long restauranteId,
+                             @RequestBody @Valid ProdutoInputData produtoInputData) {
+        Restaurante restaurante = cadastroRestauranteService.findById(restauranteId);
+
         Produto produto = produtoInputDataDisassembler.toDomainObject(produtoInputData);
+        produto.setRestaurante(restaurante);
+
         produto = service.create(produto);
 
         return produtoDTOAssembler.toModel(produto);
     }
 
     @PutMapping("/{produtoId}")
-    public ProdutoDTO upadate(@PathVariable Long produtoId,
+    public ProdutoDTO upadate(@PathVariable Long restauranteId, @PathVariable Long produtoId,
                               @RequestBody @Valid ProdutoInputData produtoInputData) {
-        Produto produtoAtual = service.findById(produtoId);
+        Produto produtoAtual = service.findById(restauranteId,produtoId);
         produtoInputDataDisassembler.copyToDomainObject(produtoInputData, produtoAtual);
         produtoAtual = service.create(produtoAtual);
 
         return produtoDTOAssembler.toModel(produtoAtual);
     }
 
-    @DeleteMapping("/{produtoId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long produtoId) {
-        service.delete(produtoId);
-    }
+//    @DeleteMapping("/{produtoId}")
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    public void delete(@PathVariable Long produtoId) {
+//        service.delete(produtoId);
+//    }
 
 }

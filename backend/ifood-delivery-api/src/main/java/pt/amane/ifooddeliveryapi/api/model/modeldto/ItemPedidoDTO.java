@@ -12,19 +12,15 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class ItemPedido implements Serializable {
+public class ItemPedidoDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long id;
-
+    private Long produtoId;
+    private String produtoNome;
     private Integer quantidade;
     private BigDecimal precoUnitario;
     private BigDecimal precoTotal;
     private String observacao;
-
-    private Produto produto;
-
-    private Pedido pedido;
 
 }

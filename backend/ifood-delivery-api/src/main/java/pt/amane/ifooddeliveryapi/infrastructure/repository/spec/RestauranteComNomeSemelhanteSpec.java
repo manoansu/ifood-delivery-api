@@ -1,4 +1,4 @@
-package pt.amane.ifooddeliveryapi.infrestructure.repository.spec;
+package pt.amane.ifooddeliveryapi.infrastructure.repository.spec;
 
 
 import lombok.AllArgsConstructor;

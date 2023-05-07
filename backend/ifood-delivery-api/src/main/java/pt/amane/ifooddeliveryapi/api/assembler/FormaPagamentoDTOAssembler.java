@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import pt.amane.ifooddeliveryapi.api.model.modeldto.FormaPagamentoDTO;
 import pt.amane.ifooddeliveryapi.domain.entities.FormaPagamento;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,7 @@ public class FormaPagamentoDTOAssembler {
      * @param formaPagamentos
      * @return formaPagamentoDTOs
      */
-    public List<FormaPagamentoDTO> toCollectionModel(List<FormaPagamento> formaPagamentos) {
+    public List<FormaPagamentoDTO> toCollectionModel(Collection<FormaPagamento> formaPagamentos) {
         return formaPagamentos.stream()
                 .map(restaurante -> toModel(restaurante))
                 .collect(Collectors.toList());

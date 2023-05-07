@@ -42,6 +42,8 @@ public class CadastroCidadeService {
     public void delete(Long id) {
         try {
             repository.deleteById(id);
+            // Executa/descarrega todas as alterações/mudanças pendente na base de dado.
+            repository.flush();
 
         }catch (EmptyResultDataAccessException e) {
             throw new CidadeNaoEncontradoException(id);

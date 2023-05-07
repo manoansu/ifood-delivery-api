@@ -6,6 +6,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pt.amane.ifooddeliveryapi.domain.entities.Grupo;
+import pt.amane.ifooddeliveryapi.domain.entities.Permissao;
 import pt.amane.ifooddeliveryapi.domain.exception.EntidadeEmUsoException;
 import pt.amane.ifooddeliveryapi.domain.exception.GrupoNaoEncontradoException;
 import pt.amane.ifooddeliveryapi.domain.repositories.GrupoRepository;
@@ -17,6 +18,9 @@ public class CadastroGruoService {
 
     @Autowired
     private GrupoRepository repository;
+
+    @Autowired
+    private CadastroPermissaoService cadastroPermissaoService;
 
     @Transactional(readOnly = true)
     public Grupo findById(Long id) {
@@ -33,6 +37,8 @@ public class CadastroGruoService {
     public void delete(Long id) {
         try {
             repository.deleteById(id);
+            // Executa/descarrega todas as alterações/mudanças pendente na base de dado.
+            repository.flush();
 
         }catch (EmptyResultDataAccessException e) {
             throw new GrupoNaoEncontradoException(id);
@@ -41,5 +47,21 @@ public class CadastroGruoService {
             throw new EntidadeEmUsoException(
             String.format(MSG_GRUPO_EM_USO, id));
         }
+    }
+
+    @Transactional
+    public void desassociarPermissao(Long grupoId, Long permissaoId) {
+        Grupo grupo = findById(grupoId);
+        Permissao permissao = cadastroPermissaoService.findById(permissaoId);
+
+        grupo.removerPermissao(permissao);
+    }
+
+    @Transactional
+    public void associarPermissao(Long grupoId, Long permissaoId) {
+        Grupo grupo = findById(grupoId);
+        Permissao permissao = cadastroPermissaoService.findById(permissaoId);
+
+        grupo.adicionarPermissao(permissao);
     }
 }

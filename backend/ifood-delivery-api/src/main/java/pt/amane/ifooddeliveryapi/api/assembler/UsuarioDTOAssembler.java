@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import pt.amane.ifooddeliveryapi.api.model.modeldto.UsuarioDTO;
 import pt.amane.ifooddeliveryapi.domain.entities.Usuario;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,7 @@ public class UsuarioDTOAssembler {
      * @param usuarios
      * @return usuarioDTOs
      */
-    public List<UsuarioDTO> toCollectionModel(List<Usuario> usuarios) {
+    public List<UsuarioDTO> toCollectionModel(Collection<Usuario> usuarios) {
         return usuarios.stream()
                 .map(restaurante -> toModel(restaurante))
                 .collect(Collectors.toList());

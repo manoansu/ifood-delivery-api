@@ -4,19 +4,30 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.time.Instant;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class PedidoInputData {
 
-    private BigDecimal subtotal;
-    private BigDecimal taxaFrete;
-    private BigDecimal valorTotal;
-    private Instant dataCriacao;
-    private Instant dataConfirmacao;
-    private Instant dataCancelamento;
-    private Instant dataEntrega;
+    @Valid
+    @NotNull
+    private RestauranteId restaurante;
+
+    @Valid
+    @NotNull
+    private EnderecoInputData enderecoEntrega;
+
+    @Valid
+    @NotNull
+    private FormaPagamentoId formaPagamento;
+
+    @Valid
+    @Size(min = 1)
+    @NotNull
+    private List<ItemPedidoInputData> itens;
 }
