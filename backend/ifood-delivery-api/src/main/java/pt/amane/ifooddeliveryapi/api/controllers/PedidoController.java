@@ -4,6 +4,10 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJacksonValue;
@@ -74,10 +78,14 @@ public class PedidoController {
 
 
     @GetMapping
-    public List<PedidoResumoDTO> search(PedidoFilter filter) {
-        List<Pedido> pedidos = repository.findAll(PedidoSpecs.usandoFiltro(filter));
+    public Page<PedidoResumoDTO> search(PedidoFilter filter, @PageableDefault(size = 10) Pageable pageable) {
+        Page<Pedido> pedidos = repository.findAll(PedidoSpecs.usandoFiltro(filter), pageable);
 
-        return pedidoResumoDTOAssembler.toCollectionModel(pedidos);
+        List<PedidoResumoDTO> pedidoResumoDTOS = pedidoResumoDTOAssembler.toCollectionModel(pedidos.getContent());
+
+        Page<PedidoResumoDTO> pedidoResumoDTOPage = new PageImpl<>(pedidoResumoDTOS, pageable ,pedidos.getTotalPages());
+
+        return pedidoResumoDTOPage;
     }
 
     @GetMapping("/{codigoPedidoId}")

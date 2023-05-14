@@ -70,13 +70,13 @@ public class Pedido implements Serializable {
         this.valorTotal = this.subtotal.add(this.taxaFrete);
     }
 
-    public void definirFrete() {
-        setTaxaFrete(getRestaurante().getTaxaFrete());
-    }
-
-    public void atribuirPedidoAosItens() {
-        getItens().forEach(item -> item.setPedido(this));
-    }
+//    public void definirFrete() {
+//        setTaxaFrete(getRestaurante().getTaxaFrete());
+//    }
+//
+//    public void atribuirPedidoAosItens() {
+//        getItens().forEach(item -> item.setPedido(this));
+//    }
 
     public void confirmar() {
         setStatus(StatusPedido.CONFIRMADO);

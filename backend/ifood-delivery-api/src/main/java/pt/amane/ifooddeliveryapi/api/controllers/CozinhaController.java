@@ -1,6 +1,10 @@
 package pt.amane.ifooddeliveryapi.api.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -32,10 +36,14 @@ public class CozinhaController {
     private CozinhaInputDataDisassembler cozinhaInputDataDisassembler;
 
     @GetMapping
-    public List<CozinhaDTO> findAll() {
-        List<Cozinha> todasCozinhas = repository.findAll();
+    public Page<CozinhaDTO> findAll(@PageableDefault(size = 10) Pageable pageable) {
+        Page<Cozinha> cozinhaPage = repository.findAll(pageable);
 
-        return cozinhaDTOAssembler.toCollectionModel(todasCozinhas);
+        List<CozinhaDTO> cozinhaDTOS =  cozinhaDTOAssembler.toCollectionModel(cozinhaPage.getContent());
+
+        Page<CozinhaDTO> cozinhaDTOPage = new PageImpl<>(cozinhaDTOS,pageable,cozinhaPage.getTotalPages());
+
+        return cozinhaDTOPage;
     }
 
     @GetMapping("/{cozinhaId}")

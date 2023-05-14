@@ -13,9 +13,11 @@ public class PedidoSpecs {
     public static Specification<Pedido> usandoFiltro(PedidoFilter filter) {
         return (root, query, builder) ->{
 
-            //Fetch resolve a consulta na bd de n + 1, usando o fecth possibilita que a consulta seja feita uma unica vez.
-            root.fetch("restaurante").fetch("cozinha");
-            root.fetch("cliente");
+            if (Pedido.class.equals(query.getResultType())){
+                //Fetch resolve a consulta na bd de n + 1, usando o fecth possibilita que a consulta seja feita uma unica vez.
+                root.fetch("restaurante").fetch("cozinha");
+                root.fetch("cliente");
+            }
 
             var predicates = new ArrayList<Predicate>();
 
