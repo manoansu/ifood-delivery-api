@@ -36,12 +36,36 @@ public class RestauranteProdutoController {
     @Autowired
     private ProdutoInputDataDisassembler produtoInputDataDisassembler;
 
+    /**
+     * Lista dos produtos que esta associado a um determinado tipo ou id de restaurante.
+     * @param restauranteId
+     * @return
+     */
     @GetMapping
-    public List<ProdutoDTO> findAll() {
-        List<Produto> produtos = repository.findAll();
+    public List<ProdutoDTO> findAll(@PathVariable Long restauranteId, @PathVariable(required = false) boolean incluirInativos) {
+
+        //Busca o id de restaurante passado na url.
+        Restaurante restaurante = cadastroRestauranteService.findById(restauranteId);
+
+        List<Produto> produtos = null;
+
+        if (incluirInativos) {
+            // Lista todos produtos associado ou pertencente a um tipo ou id de um restaurante.
+            produtos = repository.findAllByRestaurante(restaurante);
+        }else {
+            produtos = repository.findByAtivosByRestaurante(restaurante);
+        }
+
 
         return produtoDTOAssembler.toCollectionModel(produtos);
     }
+
+//    @GetMapping
+//    public List<ProdutoDTO> findAll() {
+//        List<Produto> produtos = repository.findAll();
+//
+//        return produtoDTOAssembler.toCollectionModel(produtos);
+//    }
 
     @GetMapping("/{produtoId}")
     public ProdutoDTO findById(@PathVariable Long restauranteId, @PathVariable Long produtoId) {

@@ -7,14 +7,11 @@ import org.springframework.web.bind.annotation.*;
 import pt.amane.ifooddeliveryapi.api.assembler.PermissaoDTOAssembler;
 import pt.amane.ifooddeliveryapi.api.assembler.PermissaoInputDataDisassembler;
 import pt.amane.ifooddeliveryapi.api.model.modeldto.PermissaoDTO;
-import pt.amane.ifooddeliveryapi.api.model.modeldto.inputData.PermissaoInputData;
 import pt.amane.ifooddeliveryapi.domain.entities.Grupo;
-import pt.amane.ifooddeliveryapi.domain.entities.Permissao;
 import pt.amane.ifooddeliveryapi.domain.repositories.PermissaoRepository;
 import pt.amane.ifooddeliveryapi.domain.services.CadastroGruoService;
 import pt.amane.ifooddeliveryapi.domain.services.CadastroPermissaoService;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -41,38 +38,6 @@ public class GrupoPermissaoController {
         Grupo grupo = cadastroGruoService.findById(grupoId);
 
         return permissaoDTOAssembler.toCollectionModel(grupo.getPermissoes());
-    }
-
-    @GetMapping("/{permissaoId}")
-    public PermissaoDTO findById(@PathVariable Long permissaoId) {
-        Permissao permissao = service.findById(permissaoId);
-
-        return permissaoDTOAssembler.toModel(permissao);
-    }
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public PermissaoDTO create(@RequestBody @Valid PermissaoInputData permissaoInputData) {
-        Permissao permissao = permissaoInputDataDisassembler.toDomainObject(permissaoInputData);
-        permissao = service.create(permissao);
-
-        return permissaoDTOAssembler.toModel(permissao);
-    }
-
-    @PutMapping("/{permissaoId}")
-    public PermissaoDTO upadate(@PathVariable Long permissaoId,
-                              @RequestBody @Valid PermissaoInputData permissaoInputData) {
-        Permissao permissaoAtual = service.findById(permissaoId);
-        permissaoInputDataDisassembler.copyToDomainObject(permissaoInputData, permissaoAtual);
-        permissaoAtual = service.create(permissaoAtual);
-
-        return permissaoDTOAssembler.toModel(permissaoAtual);
-    }
-
-    @DeleteMapping("/{permissaoId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long permissaoId) {
-        service.delete(permissaoId);
     }
 
     @DeleteMapping("/{permissaoId}")

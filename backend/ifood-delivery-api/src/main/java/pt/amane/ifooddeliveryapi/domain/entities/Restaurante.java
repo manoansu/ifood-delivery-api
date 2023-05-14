@@ -40,7 +40,7 @@ public class Restaurante implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+//    @NotBlank
     @Column(nullable = false)
     private String nome;
 
@@ -66,7 +66,7 @@ public class Restaurante implements Serializable {
     @ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
     @NotNull
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurante", cascade = CascadeType.ALL)

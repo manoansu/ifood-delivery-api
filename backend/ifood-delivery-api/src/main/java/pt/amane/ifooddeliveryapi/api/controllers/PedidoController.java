@@ -1,8 +1,12 @@
 package pt.amane.ifooddeliveryapi.api.controllers;
 
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 import pt.amane.ifooddeliveryapi.api.assembler.PedidoDTOAssembler;
 import pt.amane.ifooddeliveryapi.api.assembler.PedidoInputDataDisassembler;
@@ -15,7 +19,9 @@ import pt.amane.ifooddeliveryapi.domain.entities.Usuario;
 import pt.amane.ifooddeliveryapi.domain.exception.EntidadeNaoEncontradaException;
 import pt.amane.ifooddeliveryapi.domain.exception.NegocioException;
 import pt.amane.ifooddeliveryapi.domain.repositories.PedidoRepository;
+import pt.amane.ifooddeliveryapi.domain.repositories.filters.PedidoFilter;
 import pt.amane.ifooddeliveryapi.domain.services.EmissaoPedidoService;
+import pt.amane.ifooddeliveryapi.infrastructure.repository.spec.PedidoSpecs;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -42,9 +48,34 @@ public class PedidoController {
     @Autowired
     private PedidoInputDataDisassembler pedidoInputDataDisassembler;
 
+//    @GetMapping
+//    public MappingJacksonValue findAll(@RequestParam(required = false) String campos) {
+//            // Busca a lista de pedidos na BD.
+//            List<Pedido> restaurantes = repository.findAll();
+//
+//            //Converte  o tipo pedidos para DTO.
+//            List<PedidoDTO> pedidoDTOS = pedidoDTOAssembler.toCollectionModel(restaurantes);
+//
+//            //Coloca  o pedidos DTO dentro de um wrappe ou envelopa-o
+//            MappingJacksonValue pedidoWrapper = new MappingJacksonValue(pedidoDTOS);
+//
+//            SimpleFilterProvider filterProvider = new SimpleFilterProvider();
+//            filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.serializeAll());
+//
+//            // Permite filtrar a propriedades que qeuer exibir, pode ser um elemento ou mais a unica diferença é a virgual que conta qual campo que vai ser exibido..
+//            if (StringUtils.isNoneBlank(campos)) {
+//                filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.filterOutAllExcept(campos.split(",")));
+//            }
+//
+//            pedidoWrapper.setFilters(filterProvider);
+//
+//            return pedidoWrapper;
+//    }
+
+
     @GetMapping
-    public List<PedidoResumoDTO> findAll() {
-        List<Pedido> pedidos = repository.findAll();
+    public List<PedidoResumoDTO> search(PedidoFilter filter) {
+        List<Pedido> pedidos = repository.findAll(PedidoSpecs.usandoFiltro(filter));
 
         return pedidoResumoDTOAssembler.toCollectionModel(pedidos);
     }

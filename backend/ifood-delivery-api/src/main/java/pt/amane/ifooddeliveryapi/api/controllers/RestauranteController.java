@@ -1,14 +1,17 @@
 package pt.amane.ifooddeliveryapi.api.controllers;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.*;
 import pt.amane.ifooddeliveryapi.api.assembler.RestauranteDTOAssembler;
 import pt.amane.ifooddeliveryapi.api.assembler.RestauranteInputDataDisassembler;
 import pt.amane.ifooddeliveryapi.api.model.modeldto.RestauranteDTO;
 import pt.amane.ifooddeliveryapi.api.model.modeldto.inputData.RestauranteInputData;
+import pt.amane.ifooddeliveryapi.api.model.modeldto.view.RestauranteView;
 import pt.amane.ifooddeliveryapi.domain.entities.Restaurante;
 import pt.amane.ifooddeliveryapi.domain.exception.*;
 import pt.amane.ifooddeliveryapi.domain.repositories.RestauranteRepository;
@@ -35,9 +38,53 @@ public class RestauranteController {
     @Autowired
     private SmartValidator validator;
 
+//    @GetMapping
+//    public MappingJacksonValue findAll(@RequestParam(required = false) String projecao) {
+//        // Busca a lista de resturante na BD.
+//        List<Restaurante> restaurantes = repository .findAll();
+//
+//        //Converte  o tipo restaurante para DTO.
+//       List<RestauranteDTO> restauranteDTOS = restauranteDTOAssembler.toCollectionModel(restaurantes);
+//
+//       //Coloca  o restaurante DTO dentro de um wrappe ou envelopa-o
+//       MappingJacksonValue restauranteWrapper = new MappingJacksonValue(restauranteDTOS);
+//
+//        //Inicialment exibe a listagem resumida..
+//        restauranteWrapper.setSerializationView(RestauranteView.Resumo.class);
+//
+//        //se é apenas nome exibe a listagem de nome e id..
+//        if ("apenas-nome".equals(projecao)) {
+//            //Seriliza ou projecta como ele vai exibir na tela dinamicamente, nese caso apenas o resumo de id e nome vindoi de DTO.
+//            restauranteWrapper.setSerializationView(RestauranteView.ApenasNome.class);
+//        }else if ("completo".equals(projecao)) {
+//            restauranteWrapper.setSerializationView(null);
+//
+//        }
+//
+//        return restauranteWrapper;
+//    }
+
+//    @GetMapping
+//    public List<RestauranteDTO> findAll() {
+//        return restauranteDTOAssembler.toCollectionModel(repository.findAll());
+//    }
+
+    @JsonView(RestauranteView.Resumo.class)
     @GetMapping
     public List<RestauranteDTO> findAll() {
         return restauranteDTOAssembler.toCollectionModel(repository.findAll());
+    }
+
+    @JsonView(RestauranteView.Resumo.class)
+    @GetMapping(params = "projecao=resumo")
+    public List<RestauranteDTO> findAllSumarize() {
+        return findAll();
+    }
+
+    @JsonView({RestauranteView.Resumo.class, RestauranteView.ApenasNome.class})
+    @GetMapping(params = "projecao=apenas-nome")
+    public List<RestauranteDTO> findAllOnlyName() {
+        return findAll();
     }
 
     @GetMapping(value = "/{restauranteId}")

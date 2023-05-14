@@ -31,7 +31,7 @@ public class CozinhaDTOAssembler {
      */
     public List<CozinhaDTO> toCollectionModel(List<Cozinha> cozinhas) {
         return cozinhas.stream()
-                .map(restaurante -> toModel(restaurante))
+                .map(cozinha -> toModel(cozinha))
                 .collect(Collectors.toList());
     }
 }

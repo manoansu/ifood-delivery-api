@@ -30,7 +30,7 @@ public class Cozinha implements Serializable {
     @Column(nullable = false)
     private String nome;
 
-//    @OneToMany(fetch = FetchType.EAGER, mappedBy = "cozinha", cascade = CascadeType.ALL)
-    @OneToMany(mappedBy = "cozinha")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "cozinha", cascade = CascadeType.ALL)
+//    @OneToMany(mappedBy = "cozinha")
     private List<Restaurante> restaurantes = new ArrayList<>();
 }
