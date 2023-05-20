@@ -1,28 +1,23 @@
 package pt.amane.ifooddeliveryapi.domain.entities;
 
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import pt.amane.ifooddeliveryapi.domain.exception.NegocioException;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-public class Pedido implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Pedido {
 
     @EqualsAndHashCode.Include
     @Id
@@ -34,28 +29,32 @@ public class Pedido implements Serializable {
     private BigDecimal subtotal;
     private BigDecimal taxaFrete;
     private BigDecimal valorTotal;
-    private Instant dataCriacao;
-    private Instant dataConfirmacao;
-    private Instant dataCancelamento;
-    private Instant dataEntrega;
 
+    @JsonIgnore
     @Embedded
     private Endereco enderecoEntrega;
 
     @Enumerated(EnumType.STRING)
     private StatusPedido status = StatusPedido.CRIADO;
 
+    @CreationTimestamp
+    private Instant dataCriacao;
+
+    private Instant dataConfirmacao;
+    private Instant dataCancelamento;
+    private Instant dataEntrega;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private FormaPagamento formaPagamento;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_cliente_id", nullable = false)
-    private Usuario cliente;
-
-    @ManyToOne
     @JoinColumn(nullable = false)
     private Restaurante restaurante;
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_cliente_id", nullable = false)
+    private Usuario cliente;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<ItemPedido> itens = new ArrayList<>();
@@ -69,14 +68,6 @@ public class Pedido implements Serializable {
 
         this.valorTotal = this.subtotal.add(this.taxaFrete);
     }
-
-//    public void definirFrete() {
-//        setTaxaFrete(getRestaurante().getTaxaFrete());
-//    }
-//
-//    public void atribuirPedidoAosItens() {
-//        getItens().forEach(item -> item.setPedido(this));
-//    }
 
     public void confirmar() {
         setStatus(StatusPedido.CONFIRMADO);
@@ -96,8 +87,9 @@ public class Pedido implements Serializable {
     private void setStatus(StatusPedido novoStatus) {
         if (getStatus().naoPodeAlterarStatus(novoStatus)) {
             throw new NegocioException(
-                    String.format("Status do pedido %d não pode ser alterado de %s para %s",
-                            getCodigo(), getStatus().getDescricao(), novoStatus.getDescricao()));
+                    String.format("Status do pedido %s não pode ser alterado de %s para %s",
+                            getCodigo(), getStatus().getDescricao(),
+                            novoStatus.getDescricao()));
         }
 
         this.status = novoStatus;

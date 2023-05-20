@@ -1,10 +1,8 @@
 package pt.amane.ifooddeliveryapi.domain.entities;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import pt.amane.ifooddeliveryapi.core.validation.Groups;
 
 import javax.persistence.*;
@@ -13,16 +11,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
-import java.io.Serializable;
 
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-public class Cidade implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Cidade {
 
     @EqualsAndHashCode.Include
     @Id
@@ -39,4 +32,5 @@ public class Cidade implements Serializable {
     @ManyToOne
     @JoinColumn(nullable = false)
     private Estado estado;
+
 }
